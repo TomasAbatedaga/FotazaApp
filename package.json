@@ -1,18 +1,23 @@
 {
   "name": "fotazaapp",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Proyecto inegrador de web 2 (Fotaza)",
+  "main": "app.js",
   "scripts": {
+    "start": "node app.js",
+    "dev": "node --watch app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
+  "author": "Tomas Abatedaga",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "dependencies": {
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
-    "pug": "^3.0.4"
+    "pg": "^8.21.0",
+    "pg-hstore": "^2.3.4",
+    "pug": "^3.0.4",
+    "sequelize": "^6.37.8"
   }
 }
