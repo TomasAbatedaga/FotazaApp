@@ -1,27 +1,23 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/db');
 
-const Valoracion = sequelize.define('Valoracion', {
+const Coleccion = sequelize.define('Coleccion', {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true
     },
-    imagen_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false
-    },
     usuario_id: {
         type: DataTypes.INTEGER,
         allowNull: false
     },
-    puntaje: {
-        type: DataTypes.INTEGER,
+    nombre: {
+        type: DataTypes.STRING(100),
         allowNull: false
     }
 }, {
-    tableName: 'valoraciones',
+    tableName: 'colecciones',
     timestamps: false
 });
 
-module.exports = Valoracion;
+module.exports = Coleccion;
