@@ -3,13 +3,13 @@ import sequelize from '../config/db.js';
 import Usuario from './Usuario.js';
 import Publicacion from './Publicacion.js';
 import Imagen from './Imagen.js';
-import Comentarios from './Comentario.js';
+import Comentarios from './Comentarios.js';
 import Valoracion from './Valoracion.js';
 import Denuncia from './Denuncia.js';
 import Coleccion from './Coleccion.js';
-import Etiqueta from './Etiqueta.js';
+import Etiquetas from './Etiquetas.js';
 import Mensaje from './Mensaje.js';
-import Seguidor from './Seguidor.js';
+import Seguidores from './Seguidores.js';
 
 // Usuario 1...N Publicacion 
 Usuario.hasMany(Publicacion, { foreignKey: 'usuario_id', onDelete: 'CASCADE' });
@@ -56,12 +56,12 @@ Publicacion.belongsToMany(Coleccion, {
 });
 
 // Publicacion N...M Etiqueta
-Publicacion.belongsToMany(Etiqueta, { 
+Publicacion.belongsToMany(Etiquetas, { 
     through: 'publicacion_etiquetas', 
     foreignKey: 'publicacion_id',
     timestamps: false 
 });
-Etiqueta.belongsToMany(Publicacion, { 
+Etiquetas.belongsToMany(Publicacion, { 
     through: 'publicacion_etiquetas', 
     foreignKey: 'etiqueta_id',
     timestamps: false 
@@ -77,13 +77,13 @@ Mensaje.belongsTo(Usuario, { as: 'Receptor', foreignKey: 'receptor_id' });
 // Usuario N...M Usuario (es doble porque una es para seguidores y otro para seguidos)
 Usuario.belongsToMany(Usuario, { 
     as: 'Seguidores', 
-    through: Seguidor, 
+    through: Seguidores, 
     foreignKey: 'usuario_seguido_id', 
     otherKey: 'usuario_seguidor_id' 
 });
 Usuario.belongsToMany(Usuario, { 
     as: 'Seguidos', 
-    through: Seguidor, 
+    through: Seguidores, 
     foreignKey: 'usuario_seguidor_id', 
     otherKey: 'usuario_seguido_id' 
 });
@@ -97,7 +97,7 @@ export {
     Valoracion,
     Denuncia,
     Coleccion,
-    Etiqueta,
+    Etiquetas,
     Mensaje,
-    Seguidor
+    Seguidores
 };
