@@ -1,5 +1,5 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/db');
+import { DataTypes } from 'sequelize';
+import sequelize from '../config/db.js';
 
 const Coleccion = sequelize.define('Coleccion', {
     id: {
@@ -20,4 +20,4 @@ const Coleccion = sequelize.define('Coleccion', {
     timestamps: false
 });
 
-module.exports = Coleccion;
+export default Coleccion;
