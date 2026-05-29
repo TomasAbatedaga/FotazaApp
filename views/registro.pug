@@ -1,0 +1,24 @@
+doctype html
+html(lang="es")
+    head
+        meta(charset="UTF-8")
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
+        title Fotaza - Registro de Prueba
+    body
+        .form-container
+            h2 Registro de Prueba
+            
+            form(action="/auth/registro", method="POST")
+                .form-group
+                    label(for="nombre_usuario") Nombre de Usuario:
+                    input(type="text", name="nombre_usuario", id="nombre_usuario", required=true, placeholder="")
+                
+                .form-group
+                    label(for="email") Correo Electrónico:
+                    input(type="email", name="email", id="email", required=true, placeholder="")
+                
+                .form-group
+                    label(for="password") Contraseña:
+                    input(type="password", name="password", id="password", required=true, placeholder="")
+                
+                button(type="submit") Crear Cuenta
