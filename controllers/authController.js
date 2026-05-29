@@ -31,3 +31,30 @@ export const registrarUsuario = async (req, res) => {
         res.status(500).json({ error: 'Hubo un problema al procesar el registro' });
     }
 };
+
+export const iniciarSesion = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        const usuario = await Usuario.findOne({ where: { email: email } });
+        
+        if (!usuario) {
+            return res.status(404).json({ error: 'El usuario no existe' });
+        }
+
+        const contraseniaValida = await bcrypt.compare(password, usuario.password);
+        
+        if (!contraseniaValida) {
+            return res.status(401).json({ error: 'Contrasenia incorrecta' });
+        }
+
+        res.status(200).json({ 
+            mensaje: 'Inicio de sesion exitoso', 
+            usuario: usuario.nombre_usuario 
+        });
+
+    } catch (error) {
+        console.error('Error al iniciar sesion:', error);
+        res.status(500).json({ error: 'Hubo un problema al procesar el login' });
+    }
+};

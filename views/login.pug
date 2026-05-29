@@ -1,0 +1,26 @@
+doctype html
+html(lang="es")
+    head
+        meta(charset="UTF-8")
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
+        title Fotaza - Iniciar Sesion
+    body
+        h2 Iniciar Sesion
+        
+        form(action="/auth/login", method="POST")
+            div
+                label(for="email") Correo Electronico:
+                input(type="email", name="email", id="email", required=true)
+            
+            br
+            
+            div
+                label(for="password") Contrasenia:
+                input(type="password", name="password", id="password", required=true)
+            
+            br
+            
+            button(type="submit") Entrar
+
+        br
+        a(href="/auth/registro") Registrate aqui
