@@ -39,7 +39,7 @@ export const iniciarSesion = async (req, res) => {
         const usuario = await Usuario.findOne({ where: { email: email } });
         
         if (!usuario) {
-            return res.status(404).json({ error: 'El usuario no existe' });
+            return res.status(404).json({ error: 'El usuario no existe.' });
         }
 
         const contraseniaValida = await bcrypt.compare(password, usuario.password);
@@ -47,14 +47,17 @@ export const iniciarSesion = async (req, res) => {
         if (!contraseniaValida) {
             return res.status(401).json({ error: 'Contrasenia incorrecta' });
         }
+        // creo la cookie para guardar el usuario
+        req.session.usuario = {
+            id: usuario.id,
+            nombre: usuario.nombre_usuario,
+            rol: usuario.rol
+        };
 
-        res.status(200).json({ 
-            mensaje: 'Inicio de sesion exitoso', 
-            usuario: usuario.nombre_usuario 
-        });
+        return res.redirect('/');
 
     } catch (error) {
         console.error('Error al iniciar sesion:', error);
-        res.status(500).json({ error: 'Hubo un problema al procesar el login' });
+        res.status(500).json({ error: 'Hubo un problema al procesar el login.' });
     }
 };

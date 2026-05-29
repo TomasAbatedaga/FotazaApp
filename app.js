@@ -2,6 +2,7 @@ import 'dotenv/config';
 import express from 'express';
 import { sequelize } from './models/index.js';
 import authRoutes from './routes/authRoutes.js';
+import session from 'express-session';
 
 const app = express();
 const PORT = process.env.PORT;
@@ -12,6 +13,16 @@ app.use(express.static('public'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: { 
+        secure: false,
+        maxAge: 1000 * 60 * 60
+    }
+}));
+
 //Motor de plantillas
 app.set('view engine', 'pug');
 app.set('views', './views');
@@ -19,9 +30,8 @@ app.set('views', './views');
 
 //Rutas
 app.get('/', (req, res) => {
-    res.render('index.pug');
-})
-
+    res.render('index', { usuarioLogueado: req.session.usuario });
+});
 app.use('/auth', authRoutes);
 
 

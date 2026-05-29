@@ -6,13 +6,19 @@ html(lang="es")
         title Fotaza - Inicio
     body
         h1 Bienvenido a Fotaza
-        br
-
-        a(href="/auth/login")
-            button(type="button") Iniciar Sesion
         
-        br
-        br
-        
-        a(href="/auth/registro")
-            button(type="button") Crear una Cuenta
+        if usuarioLogueado
+            h2 Hola, #{usuarioLogueado.nombre}! 
+            p Que bueno verte de nuevo. Tu rol es: #{usuarioLogueado.rol}
+            
+            br
+            button(type="button") Cerrar Sesion
+        else
+            p La mejor red social para compartir tus fotos.
+            br
+            a(href="/auth/login")
+                button(type="button") Iniciar Sesion
+            br
+            br
+            a(href="/auth/registro")
+                button(type="button") Crear una Cuenta
