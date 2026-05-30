@@ -1,6 +1,7 @@
 import express from 'express';
 import { registrarUsuario } from '../controllers/authController.js';
 import { iniciarSesion } from '../controllers/authController.js';
+import { cerrarSesion } from '../controllers/authController.js';
 
 const router = express.Router();
 
@@ -15,5 +16,8 @@ router.get('/login', (req, res) => {
     res.render('login');
 });
 router.post('/login', iniciarSesion);
+
+//-- ruta de logout --
+router.get('/logout', cerrarSesion);
 
 export default router;

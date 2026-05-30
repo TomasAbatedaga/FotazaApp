@@ -45,9 +45,9 @@ export const iniciarSesion = async (req, res) => {
         const contraseniaValida = await bcrypt.compare(password, usuario.password);
         
         if (!contraseniaValida) {
-            return res.status(401).json({ error: 'Contrasenia incorrecta' });
+            return res.status(401).json({ error: 'Contrasenia incorrecta.' });
         }
-        // creo la cookie para guardar el usuario
+
         req.session.usuario = {
             id: usuario.id,
             nombre: usuario.nombre_usuario,
@@ -60,4 +60,17 @@ export const iniciarSesion = async (req, res) => {
         console.error('Error al iniciar sesion:', error);
         res.status(500).json({ error: 'Hubo un problema al procesar el login.' });
     }
+};
+
+export const cerrarSesion = (req, res) => {
+    req.session.destroy((err) => {
+        if (err) {
+            console.error('Error al cerrar la sesion:', err);
+            return res.status(500).json({ error: 'Hubo un problema al cerrar la sesion.' });
+        }
+        
+        res.clearCookie('connect.sid');
+        
+        return res.redirect('/');
+    });
 };
