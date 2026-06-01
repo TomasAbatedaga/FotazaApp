@@ -1,52 +1,35 @@
-doctype html
-html(lang="es")
-    head
-        meta(charset="UTF-8")
-        meta(name="viewport", content="width=device-width, initial-scale=1.0")
-        title Detalle de Foto - Fotaza
-        style.
-            body { font-family: Arial, sans-serif; background-color: #faf4ed; color: #4a3f35; padding: 40px; display: flex; justify-content: center; margin: 0; }
-            
-            .contenedor-detalle { background: #fffaf4; max-width: 800px; width: 100%; border-radius: 12px; box-shadow: 0 5px 15px rgba(138, 90, 68, 0.1); overflow: hidden; padding: 25px; border: 1px solid #eaddcf; }
-            
-            .header-detalle { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-            .boton-volver { text-decoration: none; color: #d08c60; font-weight: bold; transition: color 0.2s; }
-            .boton-volver:hover { color: #8a5a44; }
-            
-            .imagen-gigante { width: 100%; border-radius: 8px; max-height: 500px; object-fit: contain; background: #eaddcf; }
-            
-            .barra-acciones { display: flex; gap: 10px; margin-top: 20px; padding-top: 20px; border-top: 1px solid #eaddcf; }
-            .btn-accion { padding: 10px 15px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; color: white; transition: background-color 0.2s; }
-            
-            /* botones */
-            .btn-primario { background-color: #d08c60; }
-            .btn-primario:hover { background-color: #b5744c; }
-            .btn-secundario { background-color: #8a5a44; }
-            .btn-secundario:hover { background-color: #724a38; }
-            
-            .btn-bloqueado { background-color: #d8caba; color: #8a7b70; cursor: not-allowed; }
-            
-            /* cartel de invitado */
-            .cartel-invitado { background-color: #fdf5df; color: #a67c00; padding: 12px; border-radius: 6px; margin-top: 20px; text-align: center; font-size: 14px; border: 1px solid #f5e4b5; }
+extends layout
 
-    body
-        div.contenedor-detalle
-            div.header-detalle
-                a.boton-volver(href="/") Volver al inicio
-                h2 #{foto.titulo}
+block metadata
+  title Fotaza 2 - #{foto.titulo}
 
-            img.imagen-gigante(src=foto.url, alt=foto.titulo)
-            p(style="color: #8a7b70; margin-top: 15px;") Publicado por: <strong>#{foto.autor}</strong>
+block estilos
+  style.
+    .contenedor-detalle { max-width: 800px; margin: 40px auto; background-color: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.05); }
+    .imagen-grande { width: 100%; border-radius: 8px; }
+    .info-seccion { margin-top: 20px; }
+    .btn-accion { padding: 8px 15px; border: 1px solid #8a5a44; color: #8a5a44; background: none; border-radius: 5px; cursor: pointer; margin-right: 10px; }
+    .btn-accion:hover { background-color: #8a5a44; color: white; }
+    .aviso-invitado { background-color: #fce4e4; color: #cc0000; padding: 10px; border-radius: 5px; margin-bottom: 20px; }
 
-            if usuarioLogueado
-                div.barra-acciones
-                    button.btn-accion.btn-primario Me Gusta
-                    button.btn-accion.btn-secundario Comentar
-                    button.btn-accion.btn-secundario Descargar
-            else
-                div.cartel-invitado
-                    p 🔒 Estas viendo esto como invitado. Para likear o comentar, necesitas iniciar sesion.
-                
-                div.barra-acciones
-                    button.btn-accion.btn-bloqueado(disabled) Logueate para Likear
-                    button.btn-accion.btn-bloqueado(disabled) Comentarios ocultos
+block contenido
+  div.contenedor-detalle
+    if !usuario
+      div.aviso-invitado
+        p Estas viendo esto como invitado. Inicia sesion para dar like, comentar o ver otras opciones
+
+    img.imagen-grande(src=foto.url alt=foto.titulo)
+    
+    div.info-seccion
+      h2= foto.titulo
+      p Por: #{foto.autor}
+      
+      div.acciones
+        if usuario
+          button.btn-accion Me gusta
+          button.btn-accion Comentar
+          button.btn-accion Descargar
+        else
+          button.btn-accion(disabled style="opacity: 0.5; cursor: not-allowed;") Me gusta
+          button.btn-accion(disabled style="opacity: 0.5; cursor: not-allowed;") Comentar
+          button.btn-accion(disabled style="opacity: 0.5; cursor: not-allowed;") Descargar

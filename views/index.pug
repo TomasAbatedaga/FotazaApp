@@ -1,83 +1,37 @@
-doctype html
-html(lang="es")
-    head
-        meta(charset="UTF-8")
-        meta(name="viewport", content="width=device-width, initial-scale=1.0")
-        title Fotaza - Inicio
-        style.
-            body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #faf4ed; color: #4a3f35; }
-            
-            /* navbar */
-            .navbar { display: flex; justify-content: space-between; align-items: center; padding: 15px 30px; background-color: #fffaf4; border-bottom: 1px solid #eaddcf; }
-            .navbar-logo { font-size: 24px; font-weight: bold; color: #8a5a44; text-decoration: none; }
-            .navbar-menu { display: flex; align-items: center; gap: 15px; }
-            
-            /* Botones */
-            .btn { padding: 10px 20px; text-decoration: none; border-radius: 4px; font-weight: bold; font-size: 14px; transition: background-color 0.3s, color 0.3s; }
-            .btn-claro { background-color: transparent; color: #8a5a44; border: 1px solid #8a5a44; }
-            .btn-claro:hover { background-color: #f2e8de; }
-            .btn-oscuro { background-color: #8a5a44; color: white; border: 1px solid #8a5a44; }
-            .btn-oscuro:hover { background-color: #724a38; }
-            
-            .contenedor-principal { display: flex; min-height: 100vh; }
-            
-            /* barra filtro */
-            .sidebar { width: 220px; background: #fffaf4; padding: 20px; border-right: 1px solid #eaddcf; }
-            .sidebar h3 { margin-top: 0; color: #6a4a3a; }
-            .sidebar ul { list-style: none; padding: 0; }
-            .sidebar li { padding: 10px 0; color: #7a6a5e; cursor: pointer; border-bottom: 1px solid #eaddcf; transition: color 0.2s;}
-            .sidebar li:hover { color: #d08c60; font-weight: bold; }
-            .sidebar a { text-decoration: none; color: inherit; display: block; width: 100%; }
+extends layout
 
-            .galeria-contenedor { flex: 1; padding: 30px; }
-            .grid-fotos { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
-            
-            /* tarjetas de fotos */
-            .tarjeta-foto { background: #fffaf4; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 10px rgba(138, 90, 68, 0.08); text-decoration: none; color: inherit; display: block; border: 1px solid #f2e8de; transition: box-shadow 0.3s; }
-            .tarjeta-foto:hover { box-shadow: 0 6px 15px rgba(138, 90, 68, 0.15); }
-            
-            .contenedor-imagen { width: 100%; height: 200px; overflow: hidden; background-color: #eaddcf; }
-            .contenedor-imagen img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; }
-            .tarjeta-foto:hover .contenedor-imagen img { transform: scale(1.1); }
-            
-            .info-foto { padding: 12px; }
-            .info-foto h4 { margin: 0 0 5px 0; color: #4a3f35; }
-            .info-foto p { margin: 0; font-size: 12px; color: #8a7b70; }
-            
+block contenido
+  style.
+    .contenedor-principal { display: flex; padding: 20px; }
+    .sidebar { width: 200px; padding-right: 20px; border-right: 1px solid #ddd; }
+    .sidebar ul { list-style: none; padding: 0; }
+    .sidebar a { text-decoration: none; color: #555; display: block; margin-bottom: 10px; }
+    .sidebar a:hover { color: #8a5a44; font-weight: bold; }
+    .galeria-contenedor { flex: 1; padding-left: 20px; display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
+    .tarjeta-foto { text-decoration: none; color: inherit; display: block; }
+    .contenedor-imagen { overflow: hidden; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+    .contenedor-imagen img { width: 100%; height: auto; transition: transform 0.3s ease; display: block; }
+    .contenedor-imagen:hover img { transform: scale(1.05); }
+    .info-foto { padding-top: 10px; }
+    .etiqueta-pill { display: inline-block; background-color: #8a5a44; color: white; padding: 3px 8px; border-radius: 15px; font-size: 12px; margin-right: 5px; margin-top: 5px; }
 
-    body
-        nav.navbar
-            a.navbar-logo(href="/") Fotaza
-            div.navbar-menu
-                if usuarioLogueado
-                    span Hola, #{usuarioLogueado.nombre}
-                    a.btn.btn-claro(href="/auth/logout") Cerrar Sesion
-                else
-                    a.btn.btn-claro(href="/auth/login") Iniciar Sesion
-                    a.btn.btn-oscuro(href="/auth/registro") Registrarse
+  div.contenedor-principal
+    aside.sidebar
+      h3 Filtros
+      ul
+        li: a(href="/") Ver Todas
+        li: a(href="/?categoria=Naturaleza") Naturaleza
+        li: a(href="/?categoria=Urbano") Urbano
+        li: a(href="/?categoria=Animales") Animales
 
-        div.contenedor-principal
-            aside.sidebar
-                h3 Filtrar por Etiquetas
-                ul
-                    li
-                        a(href="/", style= !categoriaActiva ? "font-weight: bold; color: #d08c60;" : "") Ver Todas
-                    li
-                        a(href="/?categoria=Naturaleza", style= categoriaActiva === "Naturaleza" ? "font-weight: bold; color: #d08c60;" : "") Naturaleza
-                    li
-                        a(href="/?categoria=Urbano", style= categoriaActiva === "Urbano" ? "font-weight: bold; color: #d08c60;" : "") Urbano
-                    li
-                        a(href="/?categoria=Animales", style= categoriaActiva === "Animales" ? "font-weight: bold; color: #d08c60;" : "") Animales
-
-            main.galeria-contenedor
-                div.grid-fotos
-                    each foto in fotos
-                        a.tarjeta-foto(href=`/foto/${foto.id}`)
-                            div.contenedor-imagen
-                                img(src=foto.url, alt=foto.titulo)
-                            div.info-foto
-                                h4 #{foto.titulo}
-                                p Autor:  #{foto.autor}
-                                div(style="margin-top: 10px; display: flex; gap: 5px; flex-wrap: wrap;")
-                                    each tag in foto.etiquetas
-                                        span(style="background-color: #f2e8de; color: #8a5a44; font-size: 11px; padding: 4px 8px; border-radius: 4px;") ##{tag}
+    main.galeria-contenedor
+      each foto in fotos
+        a.tarjeta-foto(href=`/foto/${foto.id}`)
+          div.contenedor-imagen
+            img(src=foto.url alt=foto.titulo)
+          div.info-foto
+            h4= foto.titulo
+            p Por #{foto.autor}
+            if foto.etiquetas
+              each etiqueta in foto.etiquetas
+                span.etiqueta-pill= etiqueta

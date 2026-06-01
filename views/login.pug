@@ -1,28 +1,15 @@
-doctype html
-html(lang="es")
-    head
-        meta(charset="UTF-8")
-        meta(name="viewport", content="width=device-width, initial-scale=1.0")
-        title Fotaza - Iniciar Sesion
-    body
-        h2 Iniciar Sesion
-        
-        form(action="/auth/login", method="POST")
-            div
-                label(for="email") Correo Electronico:
-                input(type="email", name="email", id="email", required=true)
-            
-            br
-            
-            div
-                label(for="password") Contrasenia:
-                input(type="password", name="password", id="password", required=true)
-            
-            br
-            
-            button(type="submit") Entrar
+extends layout
 
-        br
-        p No tenes cuenta?
-        a(href="/auth/registro")
-            button(type="button") Crear Cuenta
+block metadata 
+    title Fotaza 2 - Iniciar Sesion
+
+block contenido
+  div(style="max-width: 400px; margin: 40px auto; text-align: center;")
+    h1 Iniciar Sesion
+    form(action="/auth/login" method="POST" style="display: flex; flex-direction: column; gap: 15px;")
+      input(type="email" name="email" placeholder="Correo electronico" required style="padding: 10px; border: 1px solid #ccc; border-radius: 5px;")
+      input(type="password" name="password" placeholder="Contrasenia" required style="padding: 10px; border: 1px solid #ccc; border-radius: 5px;")
+      button.btn-oscuro(type="submit") Entrar
+    p(style="margin-top: 20px;")
+      | No tenes cuenta?
+      a(href="/auth/registro" style="color: #8a5a44; margin-left: 5px;") Registrate aqui

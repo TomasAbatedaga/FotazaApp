@@ -1,0 +1,66 @@
+doctype html
+html(lang="es")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    
+    block metadata
+      title Fotaza 2 - Principal
+
+    style.
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #faf4ed;
+        color: #333;
+        margin: 0;
+      }
+      .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 30px;
+        background-color: #fff;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      }
+      .navbar-logo {
+        font-size: 24px;
+        font-weight: bold;
+        color: #8a5a44;
+        text-decoration: none;
+      }
+      .navbar-menu {
+        display: flex;
+        gap: 15px;
+        align-items: center;
+      }
+      .btn-claro {
+        padding: 8px 15px;
+        border: 1px solid #8a5a44;
+        color: #8a5a44;
+        text-decoration: none;
+        border-radius: 5px;
+      }
+      .btn-oscuro {
+        padding: 8px 15px;
+        background-color: #8a5a44;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+      }
+
+    block estilos
+
+  body
+    header.navbar
+      a.navbar-logo(href="/") Fotaza 2
+      div.navbar-menu
+        if usuario
+          span Hola, #{usuario.nombre_usuario}
+          a.btn-claro(href="/auth/logout") Cerrar Sesion
+        else
+          a.btn-claro(href="/auth/login") Iniciar Sesion
+          a.btn-oscuro(href="/auth/registro") Crear Cuenta
+
+    block contenido
+
+    block scripts
