@@ -16,7 +16,7 @@ Usuario.hasMany(Publicacion, { foreignKey: 'usuario_id', onDelete: 'CASCADE' });
 Publicacion.belongsTo(Usuario, { foreignKey: 'usuario_id' });
 
 // Publicacion 1...N Imagen
-Publicacion.hasMany(Imagen, { foreignKey: 'publicacion_id', onDelete: 'CASCADE' });
+Publicacion.hasMany(Imagen, { as: 'imagenes', foreignKey: 'publicacion_id', onDelete: 'CASCADE' });
 Imagen.belongsTo(Publicacion, { foreignKey: 'publicacion_id' });
 
 // Imagen 1...N Comentario

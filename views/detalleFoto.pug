@@ -18,11 +18,11 @@ block contenido
       div.aviso-invitado
         p Estas viendo esto como invitado. Inicia sesion para dar like, comentar o ver otras opciones
 
-    img.imagen-grande(src=foto.url alt=foto.titulo)
+    img.imagen-grande(src=foto.imagenes[0].url_imagen alt=foto.titulo)
     
     div.info-seccion
       h2= foto.titulo
-      p Por: #{foto.autor}
+      p Por: #{foto.Usuario.nombre_usuario}
       
       div.acciones
         if usuario

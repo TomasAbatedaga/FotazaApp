@@ -28,10 +28,10 @@ block contenido
       each foto in fotos
         a.tarjeta-foto(href=`/foto/${foto.id}`)
           div.contenedor-imagen
-            img(src=foto.url alt=foto.titulo)
+            img(src=foto.imagenes[0].url_imagen alt=foto.titulo)
           div.info-foto
             h4= foto.titulo
-            p Por #{foto.autor}
+            p Por: #{foto.Usuario.nombre_usuario}
             if foto.etiquetas
               each etiqueta in foto.etiquetas
                 span.etiqueta-pill= etiqueta
