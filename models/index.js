@@ -57,11 +57,13 @@ Publicacion.belongsToMany(Coleccion, {
 
 // Publicacion N...M Etiqueta
 Publicacion.belongsToMany(Etiquetas, { 
+    as: 'etiquetas',
     through: 'publicacion_etiquetas', 
     foreignKey: 'publicacion_id',
     timestamps: false 
 });
 Etiquetas.belongsToMany(Publicacion, { 
+    as: 'publicaciones',
     through: 'publicacion_etiquetas', 
     foreignKey: 'etiqueta_id',
     timestamps: false 

@@ -1,24 +1,35 @@
-import { Publicacion, Imagen, Usuario } from '../models/index.js';
+import { Publicacion, Imagen, Usuario, Etiquetas } from '../models/index.js';
 
 export const mostrarInicio = async (req, res) => {
     try {
-        const publicaciones = await Publicacion.findAll({
+        const categoriaSeleccionada = req.query.categoria;
+
+        let opcionesDeBusqueda = {
             include: [
-                { 
-                    model: Imagen,
-                    as: 'imagenes'
-                },
-                {
-                    model: Usuario,
-                    as: 'Usuario',
-                    attributes: ['nombre_usuario']
-                }
+                { model: Imagen, as: 'imagenes' },
+                { model: Usuario, as: 'Usuario', attributes: ['nombre_usuario'] }
             ]
-        }); 
+        };
+
+        if (categoriaSeleccionada) {
+            opcionesDeBusqueda.include.push({
+                model: Etiquetas,
+                as: 'etiquetas', 
+                where: { nombre: categoriaSeleccionada } 
+            });
+        } else {
+            opcionesDeBusqueda.include.push({
+                model: Etiquetas,
+                as: 'etiquetas'
+            });
+        }
+
+        const publicaciones = await Publicacion.findAll(opcionesDeBusqueda);
 
         res.render('index', { 
             usuario: req.session.usuario,
-            fotos: publicaciones 
+            fotos: publicaciones,
+            categoriaActiva: categoriaSeleccionada 
         });
     } catch (error) {
         console.error("Error al obtener publicaciones:", error);
