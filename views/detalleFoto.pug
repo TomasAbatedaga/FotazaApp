@@ -6,11 +6,21 @@ block metadata
 block estilos
   style.
     .contenedor-detalle { max-width: 800px; margin: 40px auto; background-color: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.05); }
-    .imagen-grande { width: 100%; border-radius: 8px; }
     .info-seccion { margin-top: 20px; }
     .btn-accion { padding: 8px 15px; border: 1px solid #8a5a44; color: #8a5a44; background: none; border-radius: 5px; cursor: pointer; margin-right: 10px; }
     .btn-accion:hover { background-color: #8a5a44; color: white; }
     .aviso-invitado { background-color: #fce4e4; color: #cc0000; padding: 10px; border-radius: 5px; margin-bottom: 20px; }
+    .imagen-grande { max-width: 100%; max-height: 500px; object-fit: contain; }
+    .contenedor-foto { position: relative; display: inline-block; width: 100%; }
+    .marca-agua { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); opacity: 0.4; width: 150px; pointer-events: none; }
+    .etiqueta-pill { background: #eee; padding: 5px 10px; border-radius: 15px; margin-right: 5px; font-size: 0.85em; color: #555; }
+    .carrusel-contenedor { position: relative; max-width: 100%; overflow: hidden; border-radius: 8px; background-color: #000; }
+    .carrusel-slide { display: none; width: 100%; text-align: center; }
+    .carrusel-slide.activo { display: block; }
+    .carrusel-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.5); color: white; border: none; padding: 10px 15px; cursor: pointer; font-size: 20px; border-radius: 50%; transition: 0.3s; }
+    .carrusel-btn:hover { background: rgba(0,0,0,0.8); }
+    .carrusel-btn.prev { left: 10px; }
+    .carrusel-btn.next { right: 10px; }
 
 block contenido
   div.contenedor-detalle
@@ -18,18 +28,62 @@ block contenido
       div.aviso-invitado
         p Estas viendo esto como invitado. Inicia sesion para dar like, comentar o ver otras opciones
 
-    img.imagen-grande(src=foto.imagenes[0].url_imagen alt=foto.titulo)
+    //img.imagen-grande(src=foto.imagenes[0].url_imagen alt=foto.titulo)
     
     div.info-seccion
       h2= foto.titulo
       p Por: #{foto.Usuario.nombre_usuario}
+      p(style="color: #666; font-size: 0.85em;") Publicado el: #{new Date(foto.fecha_publicacion).toLocaleString('es-AR')}
+
+      if foto.descripcion
+        p(style="margin-top: 10px;")= foto.descripcion
+
+      div.carrusel-contenedor
+        if foto.imagenes && foto.imagenes.length > 0
+          if foto.imagenes.length > 1
+            button.carrusel-btn.prev(onclick="cambiarImagen(-1)") &#10094;
+            button.carrusel-btn.next(onclick="cambiarImagen(1)") &#10095;
+          each imagen, index in foto.imagenes
+            div.carrusel-slide(class=(index === 0 ? "activo" : ""))
+              img.imagen-grande(src=imagen.url_imagen alt=foto.titulo)
+              if imagen.marca_agua
+                img.marca-agua(src="/images/watermark_logo.png" alt="Copyright")
+        else
+          p(style="color: #999;") No hay imagenes disponibles.
       
+      if foto.etiquetas && foto.etiquetas.length > 0
+        div(style="margin-bottom: 20px;")
+          each etiqueta in foto.etiquetas
+            span.etiqueta-pill= etiqueta.nombre
+
       div.acciones
         if usuario
           button.btn-accion Me gusta
           button.btn-accion Comentar
           button.btn-accion Descargar
-        else
+        else  
           button.btn-accion(disabled style="opacity: 0.5; cursor: not-allowed;") Me gusta
           button.btn-accion(disabled style="opacity: 0.5; cursor: not-allowed;") Comentar
           button.btn-accion(disabled style="opacity: 0.5; cursor: not-allowed;") Descargar
+
+block scripts  
+  script.
+      let slideIndex = 0;
+
+      function cambiarImagen(direccion) {
+        const slides = document.querySelectorAll('.carrusel-slide');
+        
+        if (slides.length === 0) return;
+
+        slides[slideIndex].classList.remove('activo');
+        
+        slideIndex += direccion;
+        
+        if (slideIndex >= slides.length) {
+          slideIndex = 0;
+        } else if (slideIndex < 0) {
+          slideIndex = slides.length - 1;
+        }
+        
+        slides[slideIndex].classList.add('activo');
+      }

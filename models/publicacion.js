@@ -26,6 +26,10 @@ const Publicacion = sequelize.define('Publicacion', {
     comentarios_abiertos: {
         type: DataTypes.BOOLEAN,
         defaultValue: true
+    },
+    fecha_publicacion: {
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW
     }
 }, {
     tableName: 'publicaciones',

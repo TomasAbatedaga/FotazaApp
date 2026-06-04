@@ -11,7 +11,7 @@ const Imagen = sequelize.define('Imagen', {
         allowNull: false
     },
     url_imagen: {
-        type: DataTypes.STRING(255),
+        type: DataTypes.TEXT,
         allowNull: false
     },
     licencia: {
