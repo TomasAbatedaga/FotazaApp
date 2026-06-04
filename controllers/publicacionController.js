@@ -31,14 +31,14 @@ export const mostrarInicio = async (req, res) => {
             usuario: req.session.usuario,
             fotos: fotosPlanas,
             categoriaActiva: categoriaSeleccionada,
-            mensajeAlerta: {
-                status: 'success',
-                text: 'Bienvenido a Fotaza App'
-            }
         });
     } catch (error) {
         console.error("Error al obtener publicaciones:", error);
-        res.status(500).send("Error interno del servidor");
+        res.render('index', {
+            usuario: req.session.usuario,
+            fotos: [],
+            mensajeAlerta: { status: 'error', text: 'Error al cargar las publicaciones' }
+        });
     }
 };
 
@@ -60,7 +60,11 @@ export const mostrarDetalleFoto = async (req, res) => {
         });
 
         if (!foto) {
-            return res.status(404).send("Foto no encontrada");
+            return res.render('index', {
+                usuario: req.session.usuario,
+                fotos: [], 
+                mensajeAlerta: { status: 'error', text: 'Foto no encontrada' }
+            });
         }
 
         res.render('detalleFoto', { 
@@ -69,7 +73,11 @@ export const mostrarDetalleFoto = async (req, res) => {
         });
     } catch (error) {
         console.error(error);
-        res.status(500).send("Error interno del servidor");
+        return res.render('index', {
+            usuario: req.session.usuario,
+            fotos: [],
+            mensajeAlerta: { status: 'error', text: 'Ocurrió un error al cargar la foto' }
+        });
     }
 };
 
@@ -83,7 +91,11 @@ export const mostrarFormularioNuevo = async (req,res)=>{
         });
     } catch (error) {
         console.error(error);
-        res.status(500).send("Error interno del servidor");
+        res.render('nuevaFoto', {
+            usuario: req.session.usuario,
+            etiquetas: [],
+            mensajeAlerta: { status: 'error', text: 'Ocurrio un error al cargar el formulario' }
+        });
     }
 };
 
@@ -91,6 +103,24 @@ export const crearPublicacion = async (req,res)=>{
     try{
         const { titulo, descripcion, tiene_copyright, imagenes_base64, etiquetas, nuevas_etiquetas } = req.body;
         const usuarioId = req.session.usuario.id;
+
+        if (!titulo || titulo.trim() === '') {
+            const todasLasEtiquetas = await Etiquetas.findAll(); 
+            return res.render('nuevaFoto', { 
+                etiquetas: todasLasEtiquetas,
+                mensajeAlerta: { status: 'error', text: 'El titulo es obligatorio' } 
+            });
+        }
+
+        if (!imagenes_base64 || imagenes_base64.length === 0) {
+            const todasLasEtiquetas = await Etiquetas.findAll();
+            return res.render('nuevaFoto', { 
+                etiquetas: todasLasEtiquetas,
+                mensajeAlerta: { status: 'error', text: 'Debes subir al menos una imagen valida' } 
+            });
+        }
+
+
         const nuevaPublicacion = await Publicacion.create({
             usuario_id: usuarioId,
             titulo: titulo,
@@ -136,8 +166,19 @@ export const crearPublicacion = async (req,res)=>{
         }
 
         res.redirect('./');
+
     } catch (error) {
         console.error("Error al crear la publicacion", error);
-        res.status(500).send("Error al guardar la foto");
+        try{
+            const todasLasEtiquetas = await Etiquetas.findAll();
+            res.render('nuevaFoto', {
+                etiquetas: todasLasEtiquetas,
+                mensajeAlerta: { 
+                status: 'error',
+                text: 'Hubo un error al guardar la foto, intente nuevamente'}
+            });         
+        } catch (e) {
+            res.redirect('/');
+        }
     }
 };

@@ -7,9 +7,9 @@ block contenido
   div(style="max-width: 400px; margin: 40px auto; text-align: center;")
     h1 Crear una Cuenta
     form(action="/auth/registro" method="POST" style="display: flex; flex-direction: column; gap: 15px;")
-      input(type="text" name="nombre_usuario" placeholder="Nombre de usuario" required style="padding: 10px; border: 1px solid #ccc; border-radius: 5px;")
+      input(type="text" name="nombre_usuario" placeholder="Nombre de usuario" pattern="[a-zA-Z0-9]+" title="Solo letras y números, sin espacios" minlength="4" required style="padding: 10px; border: 1px solid #ccc; border-radius: 5px;")
       input(type="email" name="email" placeholder="Correo electronico" required style="padding: 10px; border: 1px solid #ccc; border-radius: 5px;")
-      input(type="password" name="password" placeholder="Contrasenia" required style="padding: 10px; border: 1px solid #ccc; border-radius: 5px;")
+      input(type="password" name="password" placeholder="Contrasenia" minlength="6" required style="padding: 10px; border: 1px solid #ccc; border-radius: 5px;")
       button.btn-oscuro(type="submit") Registrarse
     p(style="margin-top: 20px;")
       | Ya tenes cuenta?

@@ -5,9 +5,23 @@ export const registrarUsuario = async (req, res) => {
     try {
         const { nombre_usuario, email, password } = req.body;
 
+        if (!email || !nombre_usuario || !password) {
+            return res.render('registro', { 
+                mensajeAlerta: { status: 'error', text: 'Todos los campos son obligatorios' } 
+            });
+        }
+
+        if (password.length < 6) {
+            return res.render('registro', { 
+                mensajeAlerta: { status: 'error', text: 'La contrasenia debe tener al menos 6 caracteres' } 
+            });
+        }
+
         const usuarioExistente = await Usuario.findOne({ where: { email: email } });
         if (usuarioExistente) {
-            return res.status(400).json({ error: 'Este email ya esta registrado' });
+            return res.render('registro', { 
+                mensajeAlerta: { status: 'error', text: 'Ese correo ya esta registrado. Intenta iniciar sesion.' } 
+            });
         }
 
         const salt = await bcrypt.genSalt(10);
@@ -28,7 +42,9 @@ export const registrarUsuario = async (req, res) => {
 
     } catch (error) {
         console.error('Error al registrar el usuario, ', error);
-        res.status(500).json({ error: 'Hubo un problema al procesar el registro' });
+        res.render('registro', { 
+            mensajeAlerta: { status: 'error', text: 'Hubo un problema al crear la cuenta' } 
+        });
     }
 };
 
@@ -36,16 +52,26 @@ export const iniciarSesion = async (req, res) => {
     try {
         const { email, password } = req.body;
 
+        if (!email || !password) {
+            return res.render('login', { 
+                mensajeAlerta: { status: 'error', text: 'Por favor, ingresa tu correo y contrasenia' } 
+            });
+        }
+
         const usuario = await Usuario.findOne({ where: { email: email } });
         
         if (!usuario) {
-            return res.status(404).json({ error: 'El usuario no existe.' });
+            return res.render('login', { 
+                mensajeAlerta: { status: 'error', text: 'El usuario no existe' } 
+            });
         }
 
         const contraseniaValida = await bcrypt.compare(password, usuario.password);
         
         if (!contraseniaValida) {
-            return res.status(401).json({ error: 'Contrasenia incorrecta.' });
+            return res.render('login', { 
+                mensajeAlerta: { status: 'error', text: 'Contasenia incorrecta' } 
+            });
         }
 
         req.session.usuario = {
@@ -58,7 +84,9 @@ export const iniciarSesion = async (req, res) => {
 
     } catch (error) {
         console.error('Error al iniciar sesion:', error);
-        res.status(500).json({ error: 'Hubo un problema al procesar el login.' });
+        return res.render('login', { 
+                mensajeAlerta: { status: 'error', text: 'Hubo un problema al procesar el login' } 
+            });
     }
 };
 
@@ -66,7 +94,7 @@ export const cerrarSesion = (req, res) => {
     req.session.destroy((err) => {
         if (err) {
             console.error('Error al cerrar la sesion:', err);
-            return res.status(500).json({ error: 'Hubo un problema al cerrar la sesion.' });
+            return res.redirect('/');
         }
         
         res.clearCookie('connect.sid');
