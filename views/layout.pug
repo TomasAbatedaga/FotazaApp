@@ -1,3 +1,7 @@
+include mixins/alert.pug
+include mixins/nav.pug
+include mixins/footer.pug
+
 doctype html
 html(lang="es")
   head
@@ -7,6 +11,7 @@ html(lang="es")
     block metadata
       title Fotaza 2 - Principal
 
+    block estilos
     style.
       body {
         font-family: Arial, sans-serif;
@@ -40,6 +45,7 @@ html(lang="es")
         text-decoration: none;
         border-radius: 5px;
       }
+      .btn-claro:hover { background-color: #faf4ed; }
       .btn-oscuro {
         padding: 8px 15px;
         background-color: #8a5a44;
@@ -47,20 +53,18 @@ html(lang="es")
         text-decoration: none;
         border-radius: 5px;
       }
+      .btn-oscuro:hover { background-color: #6d4635; }
 
-    block estilos
-
+      .alert { padding: 15px; margin: 20px auto; max-width: 600px; border-radius: 5px; text-align: center; font-weight: bold; }
+      .alert.error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+      .alert.success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+    
   body
-    header.navbar
-      a.navbar-logo(href="/") Fotaza 2
-      div.navbar-menu
-        if usuario
-          span Hola, #{usuario.nombre_usuario}
-          a.btn-claro(href="/auth/logout") Cerrar Sesion
-        else
-          a.btn-claro(href="/auth/login") Iniciar Sesion
-          a.btn-oscuro(href="/auth/registro") Crear Cuenta
+    +nav(usuario)
+    +alert(mensajeAlerta)
 
     block contenido
+
+    +footer()
 
     block scripts

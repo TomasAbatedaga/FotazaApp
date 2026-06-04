@@ -30,7 +30,11 @@ export const mostrarInicio = async (req, res) => {
         res.render('index', { 
             usuario: req.session.usuario,
             fotos: fotosPlanas,
-            categoriaActiva: categoriaSeleccionada 
+            categoriaActiva: categoriaSeleccionada,
+            mensajeAlerta: {
+                status: 'success',
+                text: 'Bienvenido a Fotaza App'
+            }
         });
     } catch (error) {
         console.error("Error al obtener publicaciones:", error);
