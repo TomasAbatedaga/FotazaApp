@@ -1,0 +1,37 @@
+extends layout
+
+block contenido
+  div(style="max-width: 1000px; margin: 40px auto; padding: 20px;")
+    h1(style="color: #8a5a44;") Panel de Validador
+    p Revisa las publicaciones con más de 3 denuncias.
+
+    if publicaciones && publicaciones.length > 0
+      div(style="display: flex; flex-direction: column; gap: 20px;")
+        each pub in publicaciones
+          div(style="background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); display: flex; gap: 20px;")
+            
+            div(style="flex: 1;")
+              img(src=pub.imagenes[0].url_imagen style="width: 100%; border-radius: 8px;")
+              h3= pub.titulo
+              p Autor: #{pub.Usuario.nombre_usuario}
+            
+            div(style="flex: 2;")
+              h4(style="color: #cc0000;") 🚩 Tiene #{pub.denuncias.length} Denuncias:
+              ul(style="max-height: 150px; overflow-y: auto; background: #fce4e4; padding: 15px; border-radius: 5px;")
+                each denuncia in pub.denuncias
+                  li
+                    strong= denuncia.motivo
+                    |  (por #{denuncia.Denunciante.nombre_usuario}): 
+                    em "#{denuncia.justificacion}"
+
+              //- Los Botones del Juez
+              div(style="margin-top: 20px; display: flex; gap: 10px;")
+                form(action=`/validador/baja/${pub.id}` method="POST")
+                  button(type="submit" style="background: #cc0000; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer;") ⛔ Dar de Baja Foto
+
+                form(action=`/validador/desestimar/${pub.id}` method="POST")
+                  button(type="submit" style="background: #ccc; color: #333; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer;") ♻️ Desestimar Denuncias
+
+    else
+      div(style="background: #d4edda; color: #155724; padding: 20px; border-radius: 5px; text-align: center;")
+        h3 ¡Buen trabajo! No hay publicaciones en peligro por el momento.

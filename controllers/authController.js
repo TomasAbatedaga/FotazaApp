@@ -75,7 +75,7 @@ export const iniciarSesion = async (req, res) => {
 
         req.session.usuario = {
             id: usuario.id,
-            nombre: usuario.nombre_usuario,
+            nombre_usuario: usuario.nombre_usuario,
             rol: usuario.rol
         };
 

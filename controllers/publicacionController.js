@@ -290,7 +290,7 @@ export const agregarComentario = async (req, res) => {
 export const denunciarPublicacion = async (req, res) => {
     try {
         const { id_publicacion } = req.params;
-        const { motivo } = req.body;
+        const { motivo, justificacion } = req.body;
         const usuarioId = req.session.usuario.id;
 
         const denunciaPrevia = await Denuncia.findOne({
@@ -304,7 +304,8 @@ export const denunciarPublicacion = async (req, res) => {
             await Denuncia.create({
                 publicacion_id: id_publicacion,
                 usuario_denunciante_id: usuarioId,
-                motivo: motivo
+                motivo: motivo,
+                justificacion: justificacion
             });
         }
 
