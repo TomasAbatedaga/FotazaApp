@@ -78,7 +78,7 @@ block contenido
             button.btn-accion(type="submit") Enviar Voto
           if usuario && usuario.id === foto.usuario_id
           a.btn-accion(href=`/publicacion/${foto.id}/editar` style="background-color: #f39c12; color: white; border: none; text-decoration: none;") Editar
-          button.btn-accion Descargar
+          //button.btn-accion Descargar
         else  
           button.btn-accion(disabled style="opacity: 0.5; cursor: not-allowed;") Me gusta
           div(style="display: flex; gap: 5px;")

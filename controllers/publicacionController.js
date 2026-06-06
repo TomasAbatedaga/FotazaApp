@@ -375,3 +375,46 @@ export const actualizarPublicacion = async (req, res) => {
         res.redirect('/');
     }
 };
+
+
+export const mostrarPerfil = async (req, res) => {
+    try {
+        const usuarioId = req.session.usuario.id;
+
+        const misFotos = await Publicacion.findAll({
+            where: { usuario_id: usuarioId },
+            include: [
+                { model: Imagen, as: 'imagenes' },
+                { model: Usuario, as: 'Usuario', attributes: ['nombre_usuario'] }
+            ],
+            order: [['id', 'DESC']] 
+        });
+
+        res.render('perfil', {
+            usuario: req.session.usuario,
+            fotos: misFotos
+        });
+    } catch (error) {
+        console.error(error);
+        res.redirect('/');
+    }
+};
+
+
+export const eliminarPublicacion = async (req, res) => {
+    try {
+        const { id_publicacion } = req.params;
+
+        await Publicacion.destroy({
+            where: { 
+                id: id_publicacion, 
+                usuario_id: req.session.usuario.id 
+            }
+        });
+
+        res.redirect('/mi-perfil');
+    } catch (error) {
+        console.error("Error al eliminar:", error);
+        res.redirect('/mi-perfil');
+    }
+};

@@ -14,6 +14,8 @@ import { rechazarDenuncias } from '../controllers/validadorController.js';
 import { darDeBaja } from '../controllers/validadorController.js';
 import { mostrarFormularioEdicion } from '../controllers/publicacionController.js';
 import { actualizarPublicacion } from '../controllers/publicacionController.js';
+import { mostrarPerfil } from '../controllers/publicacionController.js';
+import { eliminarPublicacion } from '../controllers/publicacionController.js';
 
 const router = express.Router();
 
@@ -30,5 +32,8 @@ router.post('/validador/rechazar/:id_publicacion', esValidador, rechazarDenuncia
 router.post('/validador/baja/:id_publicacion', esValidador, darDeBaja);
 router.get('/publicacion/:id_publicacion/editar', estaLogueado, mostrarFormularioEdicion);
 router.post('/publicacion/:id_publicacion/editar', estaLogueado, actualizarPublicacion);
+router.get('/mi-perfil', estaLogueado, mostrarPerfil);
+router.post('/publicacion/:id_publicacion/eliminar', estaLogueado, eliminarPublicacion);
+
 
 export default router;
