@@ -35,10 +35,9 @@ export const registrarUsuario = async (req, res) => {
             estado: 'activo'
         });
 
-        res.status(201).json({ 
-            mensaje: 'Usuario registrado con exito', 
-            usuario_id: nuevoUsuario.id 
-        });
+        return res.render('registro', { 
+                mensajeAlerta: { status: 'success', text: 'Usuario registrado con exito' } 
+            });
 
     } catch (error) {
         console.error('Error al registrar el usuario, ', error);

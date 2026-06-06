@@ -28,8 +28,8 @@ Usuario.hasMany(Comentarios, { foreignKey: 'usuario_id', onDelete: 'CASCADE' });
 Comentarios.belongsTo(Usuario, { foreignKey: 'usuario_id' });
 
 // Imagen 1...N Valoracion
-Imagen.hasMany(Valoracion, { foreignKey: 'imagen_id', onDelete: 'CASCADE' });
-Valoracion.belongsTo(Imagen, { foreignKey: 'imagen_id' });
+Publicacion.hasMany(Valoracion, { as: 'valoraciones', foreignKey: 'publicacion_id', onDelete: 'CASCADE' });
+Valoracion.belongsTo(Publicacion, { foreignKey: 'publicacion_id' });
 
 // Usuario 1...N Valoracion
 Usuario.hasMany(Valoracion, { foreignKey: 'usuario_id', onDelete: 'CASCADE' });

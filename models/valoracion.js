@@ -7,17 +7,21 @@ const Valoracion = sequelize.define('Valoracion', {
         primaryKey: true,
         autoIncrement: true
     },
-    imagen_id: {
+    publicacion_id: {
         type: DataTypes.INTEGER,
         allowNull: false
     },
-    usuario_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false
+    me_gusta: { 
+        type: DataTypes.BOOLEAN, 
+        defaultValue: false 
     },
     puntaje: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: true,
+        validate: {
+            min: 1,
+            max: 5
+        }
     }
 }, {
     tableName: 'valoraciones',

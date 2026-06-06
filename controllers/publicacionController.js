@@ -1,4 +1,4 @@
-import { Publicacion, Imagen, Usuario, Etiquetas } from '../models/index.js';
+import { Publicacion, Imagen, Usuario, Etiquetas, Valoracion} from '../models/index.js';
 
 export const mostrarInicio = async (req, res) => {
     try {
@@ -6,7 +6,9 @@ export const mostrarInicio = async (req, res) => {
 
         let opcionesDeBusqueda = {
             include: [
-                { model: Imagen, as: 'imagenes' },
+                { model: Imagen, as: 'imagenes',
+                    where: req.session.usuario ? {} : { licencia: 'sin_copyright'},
+                    required: !req.session.usuario ? true : false },
                 { model: Usuario, as: 'Usuario', attributes: ['nombre_usuario'] }
             ]
         };
@@ -49,12 +51,18 @@ export const mostrarDetalleFoto = async (req, res) => {
             include: [
                 { 
                     model: Imagen, 
-                    as: 'imagenes'
+                    as: 'imagenes',
+                    where: req.session.usuario ? {} : { licencia: 'sin_copyright' },
+                    required: false
                 },
                 {
                     model: Usuario, 
                     as: 'Usuario', 
                     attributes: ['nombre_usuario'] 
+                },
+                {
+                    model: Valoracion,
+                    as: 'valoraciones'
                 }
             ]
         });
@@ -67,9 +75,29 @@ export const mostrarDetalleFoto = async (req, res) => {
             });
         }
 
+        
+        let totalLikes = 0;
+        let promedio = 0;
+        let totalVotosPuntaje = 0;
+        
+        if (foto.valoraciones && foto.valoraciones.length > 0) {
+            const likes = foto.valoraciones.filter(v => v.me_gusta === true);
+            totalLikes = likes.length;
+
+            const puntajes = foto.valoraciones.filter(v => v.puntaje !== null);
+            if (puntajes.length > 0) {
+                totalVotosPuntaje = puntajes.length;
+                const suma = puntajes.reduce((acc, voto) => acc + voto.puntaje, 0);
+                promedio = (suma / totalVotosPuntaje).toFixed(1);
+            }
+        }
+
         res.render('detalleFoto', { 
             usuario: req.session.usuario,
-            foto: foto 
+            foto: foto,
+            totalLikes,
+            promedio,
+            totalVotosPuntaje
         });
     } catch (error) {
         console.error(error);
@@ -180,5 +208,48 @@ export const crearPublicacion = async (req,res)=>{
         } catch (e) {
             res.redirect('/');
         }
+    }
+};
+
+export const darMeGusta = async (req, res) => {
+    try {
+        const { id_publicacion } = req.params;
+        const usuarioId = req.session.usuario.id;
+
+        const [voto, created] = await Valoracion.findOrCreate({
+            where: { usuario_id: usuarioId, publicacion_id: id_publicacion },
+            defaults: { me_gusta: true }
+        });
+
+        if (!created) {
+            await voto.update({ me_gusta: !voto.me_gusta });
+        }
+
+        res.redirect(req.get('referer') || '/');
+    } catch (error) {
+        console.error("Error en el Me gusta:", error);
+        res.redirect('/');
+    }
+};
+
+export const valorarPublicacion = async (req, res) => {
+    try {
+        const { id_publicacion } = req.params;
+        const { puntaje } = req.body;
+        const usuarioId = req.session.usuario.id;
+
+        const [voto, created] = await Valoracion.findOrCreate({
+            where: { usuario_id: usuarioId, publicacion_id: id_publicacion },
+            defaults: { puntaje: parseInt(puntaje) }
+        });
+
+        if (!created) {
+            await voto.update({ puntaje: parseInt(puntaje) });
+        }
+
+        res.redirect(req.get('referer') || '/');
+    } catch (error) {
+        console.error("Error en la valoracion:", error);
+        res.redirect('/');
     }
 };

@@ -10,8 +10,8 @@ block contenido
     form(action="/nuevaFoto" method="POST" style="display: flex; flex-direction: column; gap: 15px;")
       
       div
-        label(for="foto_local") Sube tu foto:
-        input(type="file" id="fotos_locales" accept="image/*" multiple required)
+        label(for="foto_local") Sube tu foto (Solo JPG o PNG):
+        input(type="file" id="fotos_locales" accept="image/jpeg, image/png" multiple required)
         input(type="hidden" name="url_imagen" id="url_imagen_base64")
       
       div

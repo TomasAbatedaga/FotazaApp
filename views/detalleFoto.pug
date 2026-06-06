@@ -34,7 +34,6 @@ block contenido
       h2= foto.titulo
       p Por: #{foto.Usuario.nombre_usuario}
       p(style="color: #666; font-size: 0.85em;") Publicado el: #{new Date(foto.fecha_publicacion).toLocaleString('es-AR')}
-
       if foto.descripcion
         p(style="margin-top: 10px;")= foto.descripcion
 
@@ -56,16 +55,34 @@ block contenido
           each etiqueta in foto.etiquetas
             span.etiqueta-pill= etiqueta.nombre
 
-      div.acciones
+      div(style="margin-top: 10px; background: #faf4ed; padding: 10px; border-radius: 5px; display: inline-block;")
+        span(style="margin-right: 15px; font-weight: bold; color: #8a5a44;")  #{totalLikes} Me gusta
+        span(style="font-weight: bold; color: #8a5a44;") Promedio: #{promedio} 
+        span(style="color: #666; font-size: 0.9em;") (#{totalVotosPuntaje} valoraciones)
+
+
+      div.acciones(style="margin-top: 20px; display: flex; gap: 15px; align-items: center; flex-wrap: wrap;")
         if usuario
-          button.btn-accion Me gusta
+          form(action=`/publicacion/${foto.id}/like` method="POST" style="display: inline-block;")
+            button.btn-accion(type="submit") Me gusta
+          form(action=`/publicacion/${foto.id}/valorar` method="POST" style="display: flex; gap: 5px;")
+            select(name="puntaje" required style="padding: 8px; border-radius: 5px; border: 1px solid #ccc;")
+              option(value="" disabled selected) Calificar...
+              option(value="5") 5 ⭐
+              option(value="4") 4 ⭐
+              option(value="3") 3 ⭐
+              option(value="2") 2 ⭐
+              option(value="1") 1 ⭐
+            button.btn-accion(type="submit") Enviar Voto
           button.btn-accion Comentar
           button.btn-accion Descargar
         else  
           button.btn-accion(disabled style="opacity: 0.5; cursor: not-allowed;") Me gusta
+          div(style="display: flex; gap: 5px;")
+            select(disabled style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; opacity: 0.5; cursor: not-allowed;")
+              option(value="" disabled selected) Calificar...
           button.btn-accion(disabled style="opacity: 0.5; cursor: not-allowed;") Comentar
           button.btn-accion(disabled style="opacity: 0.5; cursor: not-allowed;") Descargar
-
 block scripts  
   script.
       let slideIndex = 0;
