@@ -7,7 +7,7 @@ const Comentarios = sequelize.define('Comentarios', {
         primaryKey: true,
         autoIncrement: true
     },
-    imagen_id: {
+    publicacion_id: {
         type: DataTypes.INTEGER,
         allowNull: false
     },
@@ -21,7 +21,7 @@ const Comentarios = sequelize.define('Comentarios', {
     }
 }, {
     tableName: 'comentarios',
-    timestamps: false
+    timestamps: true
 });
 
 export default Comentarios;

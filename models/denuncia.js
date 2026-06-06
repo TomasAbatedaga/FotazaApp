@@ -7,11 +7,7 @@ const Denuncia = sequelize.define('Denuncia', {
         primaryKey: true,
         autoIncrement: true
     },
-    tipo_denuncia: {
-        type: DataTypes.STRING(20),
-        allowNull: false // imagen o comentario
-    },
-    referencia_id: {
+    publicacion_id: {
         type: DataTypes.INTEGER,
         allowNull: false
     },
@@ -25,7 +21,7 @@ const Denuncia = sequelize.define('Denuncia', {
     },
     justificacion: {
         type: DataTypes.TEXT,
-        allowNull: false
+        allowNull: true
     },
     estado: {
         type: DataTypes.STRING(20),
@@ -33,7 +29,7 @@ const Denuncia = sequelize.define('Denuncia', {
     }
 }, {
     tableName: 'denuncias',
-    timestamps: false
+    timestamps: true
 });
 
 export default Denuncia;

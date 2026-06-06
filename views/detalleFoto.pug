@@ -32,10 +32,7 @@ block contenido
     
     div.info-seccion
       h2= foto.titulo
-      p Por: #{foto.Usuario.nombre_usuario}
-      p(style="color: #666; font-size: 0.85em;") Publicado el: #{new Date(foto.fecha_publicacion).toLocaleString('es-AR')}
-      if foto.descripcion
-        p(style="margin-top: 10px;")= foto.descripcion
+      p Publicado por: #{foto.Usuario.nombre_usuario}
 
       div.carrusel-contenedor
         if foto.imagenes && foto.imagenes.length > 0
@@ -54,6 +51,11 @@ block contenido
         div(style="margin-bottom: 20px;")
           each etiqueta in foto.etiquetas
             span.etiqueta-pill= etiqueta.nombre
+
+      if foto.descripcion
+        p(style="margin-top: 10px;")= foto.descripcion
+
+      p(style="color: #666; font-size: 0.85em;") Publicado el: #{new Date(foto.fecha_publicacion).toLocaleString('es-AR', { hour12: false})}
 
       div(style="margin-top: 10px; background: #faf4ed; padding: 10px; border-radius: 5px; display: inline-block;")
         span(style="margin-right: 15px; font-weight: bold; color: #8a5a44;")  #{totalLikes} Me gusta
@@ -74,15 +76,44 @@ block contenido
               option(value="2") 2 ⭐
               option(value="1") 1 ⭐
             button.btn-accion(type="submit") Enviar Voto
-          button.btn-accion Comentar
           button.btn-accion Descargar
         else  
           button.btn-accion(disabled style="opacity: 0.5; cursor: not-allowed;") Me gusta
           div(style="display: flex; gap: 5px;")
             select(disabled style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; opacity: 0.5; cursor: not-allowed;")
               option(value="" disabled selected) Calificar...
-          button.btn-accion(disabled style="opacity: 0.5; cursor: not-allowed;") Comentar
           button.btn-accion(disabled style="opacity: 0.5; cursor: not-allowed;") Descargar
+
+    div.acciones-secundarias(style="margin-top: 20px; text-align: right;")
+        if usuario
+          form(action=`/publicacion/${foto.id}/denunciar` method="POST" style="display: inline-block;")
+            select(name="motivo" required style="padding: 5px; border-radius: 5px;")
+              option(value="" disabled selected) Motivo de denuncia...
+              option(value="Spam") Spam
+              option(value="Contenido Inapropiado") Contenido Inapropiado
+              option(value="Derechos de Autor") Derechos de Autor
+            button(type="submit" style="background: #cc0000; color: white; border: none; padding: 6px 10px; border-radius: 5px; margin-left: 5px; cursor: pointer;")  Denunciar
+
+    div.comentarios-seccion(style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #ddd;")
+        h3(style="color: #8a5a44;") Comentarios
+
+        if foto.comentarios && foto.comentarios.length > 0
+          each comentario in foto.comentarios
+            div.comentario(style="background: #fff; padding: 15px; border-radius: 8px; margin-bottom: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);")
+              
+              //- Encabezado del comentario (Usuario + Fecha)
+              div(style="display: flex; justify-content: space-between; align-items: center;")
+                strong(style="color: #8a5a44;")= comentario.Usuario.nombre_usuario
+                
+                //- 👇 AQUÍ AGREGAMOS LA FECHA Y HORA DEL COMENTARIO
+                span(style="color: #999; font-size: 0.8em;") #{new Date(comentario.createdAt).toLocaleString('es-AR', { hour12: false})}
+              
+              //- Texto del comentario
+              p(style="margin: 8px 0 0 0; color: #333;")= comentario.texto
+        else
+          button.btn-accion(disabled style="opacity: 0.5; cursor: not-allowed;") Publicar Comentario
+
+
 block scripts  
   script.
       let slideIndex = 0;

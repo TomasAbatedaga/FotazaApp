@@ -19,13 +19,13 @@ Publicacion.belongsTo(Usuario, { foreignKey: 'usuario_id' });
 Publicacion.hasMany(Imagen, { as: 'imagenes', foreignKey: 'publicacion_id', onDelete: 'CASCADE' });
 Imagen.belongsTo(Publicacion, { foreignKey: 'publicacion_id' });
 
-// Imagen 1...N Comentario
-Imagen.hasMany(Comentarios, { foreignKey: 'imagen_id', onDelete: 'CASCADE' });
-Comentarios.belongsTo(Imagen, { foreignKey: 'imagen_id' });
+// Publicacion 1...N Comentario
+Publicacion.hasMany(Comentarios, { as: 'comentarios', foreignKey: 'publicacion_id', onDelete: 'CASCADE' });
+Comentarios.belongsTo(Publicacion, { foreignKey: 'publicacion_id' });
 
 // Usuario 1...N Comentario
-Usuario.hasMany(Comentarios, { foreignKey: 'usuario_id', onDelete: 'CASCADE' });
-Comentarios.belongsTo(Usuario, { foreignKey: 'usuario_id' });
+Usuario.hasMany(Comentarios, { as: 'comentarios', foreignKey: 'usuario_id', onDelete: 'CASCADE' });
+Comentarios.belongsTo(Usuario, { as: 'Usuario', foreignKey: 'usuario_id' });
 
 // Imagen 1...N Valoracion
 Publicacion.hasMany(Valoracion, { as: 'valoraciones', foreignKey: 'publicacion_id', onDelete: 'CASCADE' });
@@ -39,9 +39,13 @@ Valoracion.belongsTo(Usuario, { foreignKey: 'usuario_id' });
 Usuario.hasMany(Coleccion, { foreignKey: 'usuario_id', onDelete: 'CASCADE' });
 Coleccion.belongsTo(Usuario, { foreignKey: 'usuario_id' });
 
-// Usuario 1...N Denuncia
-Usuario.hasMany(Denuncia, { foreignKey: 'usuario_denunciante_id' });
-Denuncia.belongsTo(Usuario, { foreignKey: 'usuario_denunciante_id' });
+// Publicacion 1...N Denuncia
+Publicacion.hasMany(Denuncia, { as: 'denuncias', foreignKey: 'publicacion_id', onDelete: 'CASCADE' });
+Denuncia.belongsTo(Publicacion, { foreignKey: 'publicacion_id' });
+
+// Usuario 1...N Denuncias
+Usuario.hasMany(Denuncia, { as: 'denuncias_hechas', foreignKey: 'usuario_denunciante_id' });
+Denuncia.belongsTo(Usuario, { as: 'Denunciante', foreignKey: 'usuario_denunciante_id' });
 
 // Publicacion N...M Coleccion
 Coleccion.belongsToMany(Publicacion, { 

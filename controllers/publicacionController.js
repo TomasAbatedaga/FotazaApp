@@ -1,4 +1,4 @@
-import { Publicacion, Imagen, Usuario, Etiquetas, Valoracion} from '../models/index.js';
+import { Publicacion, Imagen, Usuario, Etiquetas, Valoracion, Comentarios, Denuncia } from '../models/index.js';
 
 export const mostrarInicio = async (req, res) => {
     try {
@@ -63,7 +63,15 @@ export const mostrarDetalleFoto = async (req, res) => {
                 {
                     model: Valoracion,
                     as: 'valoraciones'
+                },
+                {
+                    model: Comentarios,
+                    as: 'comentarios',
+                    include: [{ model: Usuario, as: 'Usuario', attributes: ['nombre_usuario'] }]
                 }
+            ],
+            order: [
+                [{ model: Comentarios, as: 'comentarios' }, 'createdAt', 'DESC']
             ]
         });
 
@@ -75,7 +83,7 @@ export const mostrarDetalleFoto = async (req, res) => {
             });
         }
 
-        
+
         let totalLikes = 0;
         let promedio = 0;
         let totalVotosPuntaje = 0;
@@ -250,6 +258,55 @@ export const valorarPublicacion = async (req, res) => {
         res.redirect(req.get('referer') || '/');
     } catch (error) {
         console.error("Error en la valoracion:", error);
+        res.redirect('/');
+    }
+};
+
+export const agregarComentario = async (req, res) => {
+    try {
+        const { id_publicacion } = req.params;
+        const { texto } = req.body;
+        const usuarioId = req.session.usuario.id;
+
+        if (texto && texto.trim() !== '') {
+            await Comentarios.create({
+                publicacion_id: id_publicacion,
+                usuario_id: usuarioId,
+                texto: texto
+            });
+        }
+
+        res.redirect(req.get('referer') || '/');
+    } catch (error) {
+        console.error("Error al comentar:", error);
+        res.redirect('/');
+    }
+};
+
+export const denunciarPublicacion = async (req, res) => {
+    try {
+        const { id_publicacion } = req.params;
+        const { motivo } = req.body;
+        const usuarioId = req.session.usuario.id;
+
+        const denunciaPrevia = await Denuncia.findOne({
+            where: {
+                publicacion_id: id_publicacion,
+                usuario_denunciante_id: usuarioId
+            }
+        });
+
+        if (!denunciaPrevia) {
+            await Denuncia.create({
+                publicacion_id: id_publicacion,
+                usuario_denunciante_id: usuarioId,
+                motivo: motivo
+            });
+        }
+
+        res.redirect(req.get('referer') || '/');
+    } catch (error) {
+        console.error("Error al denunciar:", error);
         res.redirect('/');
     }
 };
