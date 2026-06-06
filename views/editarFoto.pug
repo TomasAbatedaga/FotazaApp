@@ -1,0 +1,19 @@
+extends layout
+
+block contenido
+  div(style="max-width: 600px; margin: 40px auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);")
+    h2(style="color: #8a5a44; text-align: center; margin-bottom: 20px;") ✏️ Editar Publicación
+
+    form(action=`/publicacion/${foto.id}/editar` method="POST" style="display: flex; flex-direction: column; gap: 15px;")
+      
+      div
+        label(style="font-weight: bold; color: #555;") Titulo de la foto:
+        input(type="text" name="titulo" value=foto.titulo required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;")
+
+      div
+        label(style="font-weight: bold; color: #555;") Descripcion:
+        textarea(name="descripcion" rows="4" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;")= foto.descripcion
+
+      div(style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 10px;")
+        a.btn-claro(href=`/foto/${foto.id}` style="text-decoration: none; padding: 10px 15px; border-radius: 5px; color: #333; background: #eee;") Cancelar
+        button(type="submit" style="background-color: #8a5a44; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;") Guardar Cambios

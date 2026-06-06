@@ -315,3 +315,63 @@ export const denunciarPublicacion = async (req, res) => {
         res.redirect('/');
     }
 };
+
+export const mostrarFormularioEdicion = async (req, res) => {
+    try {
+        const { id_publicacion } = req.params;
+        const publicacion = await Publicacion.findByPk(id_publicacion);
+
+        if (!publicacion || publicacion.usuario_id !== req.session.usuario.id) {
+            return res.redirect('/');
+        }
+
+        const cantidadDenuncias = await Denuncia.count({
+            where: { publicacion_id: id_publicacion }
+        });
+
+        if (cantidadDenuncias > 0) {
+            const publicacionesCompletas = await Publicacion.findAll({
+                include: [
+                    { model: Imagen, as: 'imagenes' },
+                    { model: Usuario, as: 'Usuario', attributes: ['nombre_usuario'] }
+                ]
+            });
+
+            return res.render('index', { 
+                usuario: req.session.usuario,
+                fotos: publicacionesCompletas,
+                mensajeAlerta: { status: 'error', text: 'Esta publicacion tiene denuncias y no puede ser modificada.' }
+            });
+        }
+
+        res.render('editarFoto', {
+            usuario: req.session.usuario,
+            foto: publicacion
+        });
+
+    } catch (error) {
+        console.error(error);
+        res.redirect('/');
+    }
+};
+
+export const actualizarPublicacion = async (req, res) => {
+    try {
+        const { id_publicacion } = req.params;
+        const { titulo, descripcion } = req.body;
+        
+        const cantidadDenuncias = await Denuncia.count({ where: { publicacion_id: id_publicacion } });
+        
+        if (cantidadDenuncias === 0) {
+            await Publicacion.update(
+                { titulo, descripcion },
+                { where: { id: id_publicacion, usuario_id: req.session.usuario.id } }
+            );
+        }
+
+        res.redirect(`/foto/${id_publicacion}`);
+    } catch (error) {
+        console.error(error);
+        res.redirect('/');
+    }
+};
