@@ -101,15 +101,18 @@ block contenido
           each comentario in foto.comentarios
             div.comentario(style="background: #fff; padding: 15px; border-radius: 8px; margin-bottom: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);")
               
-              //- Encabezado del comentario (Usuario + Fecha)
               div(style="display: flex; justify-content: space-between; align-items: center;")
                 strong(style="color: #8a5a44;")= comentario.Usuario.nombre_usuario
                 
-                //- 👇 AQUÍ AGREGAMOS LA FECHA Y HORA DEL COMENTARIO
                 span(style="color: #999; font-size: 0.8em;") #{new Date(comentario.createdAt).toLocaleString('es-AR', { hour12: false})}
               
-              //- Texto del comentario
               p(style="margin: 8px 0 0 0; color: #333;")= comentario.texto
+        else
+          p(style="color: #666;") Aun no hay comentarios.
+        if usuario
+          form(action=`/publicacion/${foto.id}/comentar` method="POST" style="margin-top: 20px;")
+            textarea(name="texto" required placeholder="Escribe un comentario..." rows="3" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc; margin-bottom: 10px;")
+            button.btn-oscuro(type="submit" style="padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer;") Publicar Comentario
         else
           button.btn-accion(disabled style="opacity: 0.5; cursor: not-allowed;") Publicar Comentario
 

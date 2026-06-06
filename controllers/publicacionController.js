@@ -68,6 +68,10 @@ export const mostrarDetalleFoto = async (req, res) => {
                     model: Comentarios,
                     as: 'comentarios',
                     include: [{ model: Usuario, as: 'Usuario', attributes: ['nombre_usuario'] }]
+                },
+                {
+                    model: Etiquetas,
+                    as: 'etiquetas'
                 }
             ],
             order: [
