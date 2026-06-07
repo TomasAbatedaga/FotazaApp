@@ -1,4 +1,4 @@
-import { Publicacion, Imagen, Usuario, Etiquetas, Valoracion, Comentarios, Denuncia, DenunciaComentario, Seguidor } from '../models/index.js';
+import { Publicacion, Imagen, Usuario, Etiquetas, Valoracion, Comentarios, Denuncia, DenunciaComentario, Seguidor, Notificacion } from '../models/index.js';
 import { Op } from 'sequelize';
 
 export const mostrarInicio = async (req, res) => {
@@ -238,6 +238,17 @@ export const darMeGusta = async (req, res) => {
             await voto.update({ me_gusta: !voto.me_gusta });
         }
 
+        const foto = await Publicacion.findByPk(id_publicacion);
+
+        if (foto && foto.usuario_id !== usuarioId && (created || voto.me_gusta)) {
+            await Notificacion.create({
+                usuario_receptor_id: foto.usuario_id,
+                usuario_generador_id: usuarioId,
+                tipo_evento: 'valoracion',
+                publicacion_id: id_publicacion
+            });
+        }
+
         res.redirect(req.get('referer') || '/');
     } catch (error) {
         console.error("Error en el Me gusta:", error);
@@ -260,6 +271,17 @@ export const valorarPublicacion = async (req, res) => {
             await voto.update({ puntaje: parseInt(puntaje) });
         }
 
+        const foto = await Publicacion.findByPk(id_publicacion);
+
+        if (foto && foto.usuario_id !== usuarioId && created) {
+            await Notificacion.create({
+                usuario_receptor_id: foto.usuario_id,
+                usuario_generador_id: usuarioId,
+                tipo_evento: 'valoracion',
+                publicacion_id: id_publicacion
+            });
+        }
+
         res.redirect(req.get('referer') || '/');
     } catch (error) {
         console.error("Error en la valoracion:", error);
@@ -278,6 +300,17 @@ export const agregarComentario = async (req, res) => {
                 publicacion_id: id_publicacion,
                 usuario_id: usuarioId,
                 texto: texto
+            });
+        }
+
+        const foto = await Publicacion.findByPk(id_publicacion);
+
+        if (foto.usuario_id !== usuarioId) {
+            await Notificacion.create({
+                usuario_receptor_id: foto.usuario_id,
+                usuario_generador_id: usuarioId,
+                tipo_evento: 'comentario',
+                publicacion_id: id_publicacion
             });
         }
 

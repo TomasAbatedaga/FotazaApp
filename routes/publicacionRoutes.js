@@ -26,6 +26,8 @@ import { realizarBusqueda } from '../controllers/publicacionController.js';
 import { mostrarPerfilUsuarioBusqueda } from '../controllers/publicacionController.js';
 import { toggleSeguir } from '../controllers/usuarioController.js';
 import { mostrarFeedSeguidos } from '../controllers/publicacionController.js';
+import { verNotificaciones } from '../controllers/usuarioController.js';
+import { marcarNotificacionLeida } from '../controllers/usuarioController.js';
 
 
 
@@ -56,5 +58,7 @@ router.get('/buscar', realizarBusqueda);
 router.get('/usuario/:nombre_usuario', mostrarPerfilUsuarioBusqueda);
 router.post('/usuario/:id/seguir', estaLogueado, toggleSeguir);
 router.get('/feed', estaLogueado, mostrarFeedSeguidos);
+router.get('/notificaciones', estaLogueado, verNotificaciones);
+router.post('/notificaciones/:id/leer', estaLogueado, marcarNotificacionLeida);
 
 export default router;

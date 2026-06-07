@@ -19,9 +19,17 @@ const Notificacion = sequelize.define('Notificacion', {
         type: DataTypes.STRING(50),
         allowNull: false
     },
+    publicacion_id: {
+        type: DataTypes.INTEGER,
+        allowNull: true 
+    },
     leida: {
         type: DataTypes.BOOLEAN,
         defaultValue: false
+    },
+    fecha_notificacion: {
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW
     }
 }, {
     tableName: 'notificaciones',

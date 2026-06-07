@@ -1,0 +1,42 @@
+extends layout
+
+block contenido
+  div(style="max-width: 650px; margin: 40px auto; padding: 20px; background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);")
+    h2(style="color: #8a5a44; border-bottom: 2px solid #f4eae6; padding-bottom: 15px; margin-bottom: 20px;") Mis Notificaciones
+
+    if notificaciones && notificaciones.length > 0
+      div(style="display: flex; flex-direction: column; gap: 10px;")
+        each notif in notificaciones
+          div(style=`padding: 15px; border-radius: 6px; border-left: 4px solid #8a5a44; background: ${notif.leida ? '#ffffff' : '#fdf5f5'}; border-bottom: 1px solid #eee; display: flex; flex-direction: column; gap: 5px;`)
+            div(style="flex: 1; display: flex; flex-direction: column; gap: 5px;")
+                div(style="color: #333; font-size: 1.05em;")
+                if notif.tipo_evento === 'comentario'
+                    strong= notif.Generador.nombre_usuario
+                    |  comento tu publicacion 
+                    a(href=`/foto/${notif.publicacion_id}` style="color: #8a5a44; font-weight: bold; text-decoration: none;") "#{notif.Publicacion.titulo}"
+                
+                else if notif.tipo_evento === 'valoracion' 
+                    strong= notif.Generador.nombre_usuario
+                    |  valoro tu imagen 
+                    a(href=`/foto/${notif.publicacion_id}` style="color: #8a5a44; font-weight: bold; text-decoration: none;") "#{notif.Publicacion.titulo}"
+                
+                else if notif.tipo_evento === 'interes'
+                    strong= notif.Generador.nombre_usuario
+                    |  marco "me interesa" en tu publicacion 
+                    a(href=`/foto/${notif.publicacion_id}` style="color: #8a5a44; font-weight: bold; text-decoration: none;") "#{notif.Publicacion.titulo}"
+                
+                else if notif.tipo_evento === 'seguidor'
+                    strong= notif.Generador.nombre_usuario
+                    |  ha comenzado a seguirte. 
+                    a(href=`/usuario/${notif.Generador.nombre_usuario}` style="color: #8a5a44; font-weight: bold; text-decoration: none;") [Ver Perfil]
+
+                div(style="font-size: 0.8em; color: #999;")
+                | #{new Date(notif.fecha_notificacion).toLocaleString('es-AR', { hour12: false })}
+        
+            if !notif.leida
+                form(action=`/notificaciones/${notif.id}/leer` method="POST" style="margin: 0;")
+                    button(type="submit" style="background: #8a5a44; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 0.85em; font-weight: bold; white-space: nowrap;") Leer
+    
+    else
+      div(style="text-align: center; padding: 40px; color: #777;")
+        h3 No tienes ninguna notificacion.

@@ -11,6 +11,7 @@ import Etiquetas from './Etiquetas.js';
 import Mensaje from './Mensaje.js';
 import Seguidor from './Seguidores.js';
 import DenunciaComentario from './DenunciaComentario.js';
+import Notificacion from './Notificacion.js';
 
 // Usuario 1...N Publicacion 
 Usuario.hasMany(Publicacion, { foreignKey: 'usuario_id', onDelete: 'CASCADE' });
@@ -55,6 +56,18 @@ DenunciaComentario.belongsTo(Comentarios, { foreignKey: 'comentario_id' });
 // Usuario 1...N Denuncias de Comentario
 Usuario.hasMany(DenunciaComentario, { foreignKey: 'usuario_denunciante_id' });
 DenunciaComentario.belongsTo(Usuario, { as: 'Denunciante', foreignKey: 'usuario_denunciante_id' });
+
+// El que recibe el aviso
+Usuario.hasMany(Notificacion, { foreignKey: 'usuario_receptor_id', as: 'notificaciones_recibidas' });
+Notificacion.belongsTo(Usuario, { foreignKey: 'usuario_receptor_id', as: 'Receptor' });
+
+// El que hace la accion
+Usuario.hasMany(Notificacion, { foreignKey: 'usuario_generador_id', as: 'notificaciones_generadas' });
+Notificacion.belongsTo(Usuario, { foreignKey: 'usuario_generador_id', as: 'Generador' });
+
+// La foto a la que hace referencia el aviso
+Publicacion.hasMany(Notificacion, { foreignKey: 'publicacion_id', onDelete: 'CASCADE' });
+Notificacion.belongsTo(Publicacion, { foreignKey: 'publicacion_id' });
 
 // Publicacion N...M Coleccion
 Coleccion.belongsToMany(Publicacion, { 
@@ -115,5 +128,6 @@ export {
     Etiquetas,
     Mensaje,
     Seguidor,
-    DenunciaComentario
+    DenunciaComentario,
+    Notificacion
 };

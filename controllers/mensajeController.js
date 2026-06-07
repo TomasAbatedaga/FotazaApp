@@ -27,6 +27,12 @@ export const meInteresa = async (req, res) => {
                 publicacion_id: id_publicacion,
                 texto: `Hola, estoy interesado en tu publicacion "${publicacion.titulo}".`
             });
+            await Notificacion.create({
+                usuario_receptor_id: publicacion.usuario_id,
+                usuario_generador_id: interesadoId,
+                tipo_evento: 'interes',
+                publicacion_id: id_publicacion
+            });
         }
 
         res.redirect('/mensajes');
