@@ -9,7 +9,7 @@ import Denuncia from './Denuncia.js';
 import Coleccion from './Coleccion.js';
 import Etiquetas from './Etiquetas.js';
 import Mensaje from './Mensaje.js';
-import Seguidores from './Seguidores.js';
+import Seguidor from './Seguidores.js';
 import DenunciaComentario from './DenunciaComentario.js';
 
 // Usuario 1...N Publicacion 
@@ -92,13 +92,13 @@ Mensaje.belongsTo(Usuario, { as: 'Receptor', foreignKey: 'receptor_id' });
 // Usuario N...M Usuario (es doble porque una es para seguidores y otro para seguidos)
 Usuario.belongsToMany(Usuario, { 
     as: 'Seguidores', 
-    through: Seguidores, 
+    through: Seguidor, 
     foreignKey: 'usuario_seguido_id', 
     otherKey: 'usuario_seguidor_id' 
 });
 Usuario.belongsToMany(Usuario, { 
     as: 'Seguidos', 
-    through: Seguidores, 
+    through: Seguidor, 
     foreignKey: 'usuario_seguidor_id', 
     otherKey: 'usuario_seguido_id' 
 });
@@ -114,6 +114,6 @@ export {
     Coleccion,
     Etiquetas,
     Mensaje,
-    Seguidores,
+    Seguidor,
     DenunciaComentario
 };

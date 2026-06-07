@@ -1,4 +1,4 @@
-import { Publicacion, Imagen, Usuario, Etiquetas, Valoracion, Comentarios, Denuncia, DenunciaComentario } from '../models/index.js';
+import { Publicacion, Imagen, Usuario, Etiquetas, Valoracion, Comentarios, Denuncia, DenunciaComentario, Seguidor } from '../models/index.js';
 import { Op } from 'sequelize';
 
 export const mostrarInicio = async (req, res) => {
@@ -391,9 +391,14 @@ export const mostrarPerfil = async (req, res) => {
             order: [['id', 'DESC']] 
         });
 
+        const cantSeguidores = await Seguidor.count({ where: { usuario_seguido_id: usuarioId } });
+        const cantSeguidos = await Seguidor.count({ where: { usuario_seguidor_id: usuarioId } })
+
         res.render('perfil', {
             usuario: req.session.usuario,
-            fotos: misFotos
+            fotos: misFotos,
+            cantSeguidores,
+            cantSeguidos
         });
     } catch (error) {
         console.error(error);
@@ -573,10 +578,27 @@ export const mostrarPerfilUsuarioBusqueda = async (req, res) => {
             include: [{ model: Imagen, as: 'imagenes' }]
         });
 
+        const cantSeguidores = await Seguidor.count({ where: { usuario_seguido_id: usuarioObjetivo.id } });
+        const cantSeguidos = await Seguidor.count({ where: { usuario_seguidor_id: usuarioObjetivo.id } });
+
+        let loSigo = false;
+        if (req.session.usuario) {
+            const check = await Seguidor.findOne({
+                where: { 
+                    usuario_seguidor_id: req.session.usuario.id, 
+                    usuario_seguido_id: usuarioObjetivo.id 
+                }
+            });
+            if (check) loSigo = true;
+        }
+
         res.render('perfilPublico', {
             usuario: req.session.usuario,
             usuarioObjetivo: usuarioObjetivo,
-            fotos: publicaciones
+            fotos: publicaciones,
+            cantSeguidores,
+            cantSeguidos,
+            loSigo
         });
     } catch (error) {
         console.error("Error al cargar perfil:", error);
@@ -584,3 +606,44 @@ export const mostrarPerfilUsuarioBusqueda = async (req, res) => {
     }
 };
 
+
+export const mostrarFeedSeguidos = async (req, res) => {
+    try {
+        const mi_id = req.session.usuario.id;
+
+        const seguidos = await Seguidor.findAll({
+            where: { usuario_seguidor_id: mi_id },
+            attributes: ['usuario_seguido_id']
+        });
+
+        const idsSeguidos = seguidos.map(s => s.usuario_seguido_id);
+
+        if (idsSeguidos.length === 0) {
+            return res.render('feedSeguidos', {
+                usuario: req.session.usuario,
+                fotos: []
+            });
+        }
+
+        const publicacionesFeed = await Publicacion.findAll({
+            where: {
+                usuario_id: { [Op.in]: idsSeguidos },
+                estado: 'activa'
+            },
+            include: [
+                { model: Imagen, as: 'imagenes' },
+                { model: Usuario, as: 'Usuario', attributes: ['nombre_usuario'] }
+            ],
+            order: [['fecha_publicacion', 'DESC']] 
+        });
+
+        res.render('feedSeguidos', {
+            usuario: req.session.usuario,
+            fotos: publicacionesFeed
+        });
+
+    } catch (error) {
+        console.error("Error al cargar el feed:", error);
+        res.redirect('/');
+    }
+};

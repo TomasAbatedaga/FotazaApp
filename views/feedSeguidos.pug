@@ -1,0 +1,22 @@
+extends layout
+
+block contenido
+  div(style="max-width: 1000px; margin: 40px auto; padding: 20px;")
+    h2(style="color: #8a5a44; text-align: center; margin-bottom: 30px;") Mi Feed - Personas que sigo
+
+    if fotos && fotos.length > 0
+      div.galeria(style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;")
+        each foto in fotos
+          div.tarjeta-foto(style="background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1);")
+            a(href=`/foto/${foto.id}` style="text-decoration: none; color: inherit;")
+              div.contenedor-imagen
+                if foto.imagenes && foto.imagenes.length > 0
+                  img(src=foto.imagenes[0].url_imagen alt=foto.titulo style="width: 100%; height: 250px; object-fit: cover;")
+              div.info-foto(style="padding: 15px;")
+                h4(style="margin: 0 0 5px 0; color: #333;")= foto.titulo
+                p(style="margin: 0; color: #8a5a44; font-weight: bold; font-size: 0.9em;") Por: #{foto.Usuario.nombre_usuario}
+    else
+      div(style="background: #fff; padding: 40px; border-radius: 8px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05);")
+        h3(style="color: #666; margin-bottom: 15px;") Tu feed esta vacio
+        p(style="color: #999; margin-bottom: 20px;") No seguis a nadie o las personas que seguis no han publicado nada
+        a.btn-oscuro(href="/" style="text-decoration: none;") Explorar publicaciones

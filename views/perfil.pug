@@ -4,6 +4,14 @@ block contenido
   div(style="max-width: 1000px; margin: 40px auto; padding: 20px;")
     h2(style="color: #8a5a44; text-align: center; margin-bottom: 30px;") Mi Perfil
 
+    div(style="display: flex; justify-content: center; gap: 30px; margin: 20px 0; font-size: 1.1em; color: #555; margin-bottom: 25px;")
+      div
+        strong #{cantSeguidores} 
+        | Seguidores
+      div
+        strong #{cantSeguidos} 
+        | Seguidos
+
     div(style="text-align: center; margin-bottom: 30px;")
       a.btn-oscuro(href="/mi-perfil/denuncias" style="background-color: #cc0000; border-color: #cc0000; text-decoration: none;") Ver Comentarios Denunciados
     

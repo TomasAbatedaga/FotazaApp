@@ -24,6 +24,10 @@ import { mostrarMensajes } from '../controllers/mensajeController.js';
 import { responderMensaje } from '../controllers/mensajeController.js';
 import { realizarBusqueda } from '../controllers/publicacionController.js';
 import { mostrarPerfilUsuarioBusqueda } from '../controllers/publicacionController.js';
+import { toggleSeguir } from '../controllers/usuarioController.js';
+import { mostrarFeedSeguidos } from '../controllers/publicacionController.js';
+
+
 
 const router = express.Router();
 
@@ -50,5 +54,7 @@ router.get('/mensajes', estaLogueado, mostrarMensajes);
 router.post('/mensaje/responder', estaLogueado, responderMensaje);
 router.get('/buscar', realizarBusqueda);
 router.get('/usuario/:nombre_usuario', mostrarPerfilUsuarioBusqueda);
+router.post('/usuario/:id/seguir', estaLogueado, toggleSeguir);
+router.get('/feed', estaLogueado, mostrarFeedSeguidos);
 
 export default router;

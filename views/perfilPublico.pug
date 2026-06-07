@@ -4,6 +4,23 @@ block contenido
   div(style="max-width: 1000px; margin: 40px auto; padding: 20px;")
     h2(style="color: #8a5a44; text-align: center;") Perfil de #{usuarioObjetivo.nombre_usuario}
     
+    div(style="display: flex; justify-content: center; gap: 30px; margin: 20px 0; font-size: 1.1em; color: #555;")
+      div
+        strong #{cantSeguidores} 
+        | Seguidores
+      div
+        strong #{cantSeguidos} 
+        | Seguidos
+
+    if usuario && usuario.id !== usuarioObjetivo.id
+      form(action=`/usuario/${usuarioObjetivo.id}/seguir` method="POST" style="text-align: center; margin-bottom: 30px;")
+        if loSigo
+          button(type="submit" style="background: #ccc; color: #333; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold;") Siguiendo (Dejar de seguir)
+        else
+          button(type="submit" style="background: #8a5a44; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold;") Seguir
+    else if !usuario
+      p(style="text-align: center; color: #cc0000; font-size: 0.9em;") Inicia sesion para seguir a este usuario.
+
     if fotos && fotos.length > 0
       div.galeria(style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; margin-top: 30px;")
         each foto in fotos
