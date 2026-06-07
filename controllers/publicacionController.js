@@ -1,4 +1,4 @@
-import { Publicacion, Imagen, Usuario, Etiquetas, Valoracion, Comentarios, Denuncia, DenunciaComentario, Seguidor, Notificacion } from '../models/index.js';
+import { Publicacion, Imagen, Usuario, Etiquetas, Valoracion, Comentarios, Denuncia, DenunciaComentario, Seguidor, Notificacion, Coleccion } from '../models/index.js';
 import { Op } from 'sequelize';
 
 export const mostrarInicio = async (req, res) => {
@@ -105,12 +105,20 @@ export const mostrarDetalleFoto = async (req, res) => {
             }
         }
 
+        let misColecciones = [];
+        if (req.session.usuario) {
+            misColecciones = await Coleccion.findAll({
+                where: { usuario_id: req.session.usuario.id }
+            });
+        }
+
         res.render('detalleFoto', { 
             usuario: req.session.usuario,
             foto: foto,
             totalLikes,
             promedio,
-            totalVotosPuntaje
+            totalVotosPuntaje,
+            misColecciones
         });
     } catch (error) {
         console.error(error);

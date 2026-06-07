@@ -28,7 +28,10 @@ import { toggleSeguir } from '../controllers/usuarioController.js';
 import { mostrarFeedSeguidos } from '../controllers/publicacionController.js';
 import { verNotificaciones } from '../controllers/usuarioController.js';
 import { marcarNotificacionLeida } from '../controllers/usuarioController.js';
-
+import { misColecciones } from '../controllers/coleccionController.js';
+import { crearColeccion } from '../controllers/coleccionController.js';
+import { guardarEnColeccion } from '../controllers/coleccionController.js';
+import { verColeccion } from '../controllers/coleccionController.js';
 
 
 const router = express.Router();
@@ -60,5 +63,10 @@ router.post('/usuario/:id/seguir', estaLogueado, toggleSeguir);
 router.get('/feed', estaLogueado, mostrarFeedSeguidos);
 router.get('/notificaciones', estaLogueado, verNotificaciones);
 router.post('/notificaciones/:id/leer', estaLogueado, marcarNotificacionLeida);
+router.get('/colecciones', estaLogueado, misColecciones);
+router.post('/colecciones/crear', estaLogueado, crearColeccion);
+router.post('/colecciones/guardar', estaLogueado, guardarEnColeccion);
+router.get('/colecciones/:id', estaLogueado, verColeccion);
+
 
 export default router;

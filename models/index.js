@@ -12,6 +12,7 @@ import Mensaje from './Mensaje.js';
 import Seguidor from './Seguidores.js';
 import DenunciaComentario from './DenunciaComentario.js';
 import Notificacion from './Notificacion.js';
+import ColeccionPublicacion from './ColeccionPublicacion.js';
 
 // Usuario 1...N Publicacion 
 Usuario.hasMany(Publicacion, { foreignKey: 'usuario_id', onDelete: 'CASCADE' });
@@ -71,14 +72,26 @@ Notificacion.belongsTo(Publicacion, { foreignKey: 'publicacion_id' });
 
 // Publicacion N...M Coleccion
 Coleccion.belongsToMany(Publicacion, { 
-    through: 'coleccion_publicaciones', 
-    foreignKey: 'coleccion_id',
-    timestamps: false 
+    through: ColeccionPublicacion, 
+    foreignKey: 'coleccion_id', 
+    otherKey: 'publicacion_id',
+    as: 'publicaciones_guardadas' 
 });
+
 Publicacion.belongsToMany(Coleccion, { 
-    through: 'coleccion_publicaciones', 
-    foreignKey: 'publicacion_id',
-    timestamps: false 
+    through: ColeccionPublicacion, 
+    foreignKey: 'publicacion_id', 
+    otherKey: 'coleccion_id',
+    as: 'colecciones_que_la_tienen' 
+});
+
+// Usuario 1...M Coleccion
+Usuario.hasMany(Coleccion, { 
+    foreignKey: 'usuario_id', 
+    as: 'colecciones' 
+});
+Coleccion.belongsTo(Usuario, { 
+    foreignKey: 'usuario_id' 
 });
 
 // Publicacion N...M Etiqueta
@@ -129,5 +142,6 @@ export {
     Mensaje,
     Seguidor,
     DenunciaComentario,
-    Notificacion
+    Notificacion,
+    ColeccionPublicacion
 };
