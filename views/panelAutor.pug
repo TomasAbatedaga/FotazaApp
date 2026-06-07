@@ -1,0 +1,31 @@
+extends layout
+
+block contenido
+  div(style="max-width: 1000px; margin: 40px auto; padding: 20px;")
+    h2(style="color: #8a5a44; text-align: center;") Buzon de Quejas de Mis Fotos
+    p(style="text-align: center; color: #666;") Revisa los comentarios que otros usuarios reportaron en tus publicaciones.
+
+    if publicaciones && publicaciones.length > 0
+      each pub in publicaciones
+        div(style="background: #fff; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);")
+          h3(style="color: #333;") Publicacion: #{pub.titulo}
+          
+          each comentario in pub.comentarios
+            div(style="background: #fdf5f5; padding: 15px; border-radius: 5px; margin-top: 10px; border-left: 4px solid #cc0000;")
+              p(style="margin-top: 0;")
+                strong(style="color: #8a5a44;") #{comentario.Usuario.nombre_usuario} comento:
+                |  "#{comentario.texto}"
+              
+              div(style="margin-top: 10px; padding: 10px; background: #fff; border-radius: 5px;")
+                h4(style="margin: 0 0 10px 0; color: #cc0000;") Motivos de denuncia (#{comentario.denuncias.length}):
+                ul(style="margin: 0; padding-left: 20px; color: #555;")
+                  each denuncia in comentario.denuncias
+                    li
+                      strong #{denuncia.motivo} 
+                      | (por #{denuncia.Denunciante.nombre_usuario}): #{denuncia.justificacion}
+              
+              form(action=`/comentario/${comentario.id}/eliminar` method="POST" style="margin-top: 15px; text-align: right;")
+                button(type="submit" style="background: #cc0000; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer;") Borrar Comentario
+    else
+      div(style="background: #d4edda; color: #155724; padding: 20px; border-radius: 5px; text-align: center;")
+        h3 No tienes comentarios denunciados.

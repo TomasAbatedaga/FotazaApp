@@ -1,4 +1,4 @@
-import { Publicacion, Imagen, Usuario, Etiquetas, Valoracion, Comentarios, Denuncia } from '../models/index.js';
+import { Publicacion, Imagen, Usuario, Etiquetas, Valoracion, Comentarios, Denuncia, DenunciaComentario } from '../models/index.js';
 
 export const mostrarInicio = async (req, res) => {
     try {
@@ -416,5 +416,91 @@ export const eliminarPublicacion = async (req, res) => {
     } catch (error) {
         console.error("Error al eliminar:", error);
         res.redirect('/mi-perfil');
+    }
+};
+
+
+export const denunciarComentario = async (req, res) => {
+    try {
+        const { id_comentario } = req.params;
+        const { motivo, justificacion } = req.body;
+        const usuarioId = req.session.usuario.id;
+
+        const denunciaPrevia = await DenunciaComentario.findOne({
+            where: { comentario_id: id_comentario, usuario_denunciante_id: usuarioId }
+        });
+
+        if (!denunciaPrevia) {
+            await DenunciaComentario.create({
+                comentario_id: id_comentario,
+                usuario_denunciante_id: usuarioId,
+                motivo,
+                justificacion
+            });
+        }
+
+        res.redirect(req.get('referer') || '/');
+    } catch (error) {
+        console.error("Error al denunciar comentario:", error);
+        res.redirect('/');
+    }
+};
+
+
+export const mostrarDenunciasComentarios = async (req, res) => {
+    try {
+        const usuarioId = req.session.usuario.id;
+
+        const publicaciones = await Publicacion.findAll({
+            where: { usuario_id: usuarioId },
+            include: [
+                {
+                    model: Comentarios,
+                    as: 'comentarios',
+                    required: true,
+                    include: [
+                        { model: Usuario, as: 'Usuario', attributes: ['nombre_usuario'] },
+                        {
+                            model: DenunciaComentario,
+                            as: 'denuncias',
+                            required: true,
+                            include: [
+                                { model: Usuario, as: 'Denunciante', attributes: ['nombre_usuario'] }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        });
+
+        res.render('panelAutor', {
+            usuario: req.session.usuario,
+            publicaciones: publicaciones
+        });
+    } catch (error) {
+        console.error("Error al cargar denuncias de comentarios:", error);
+        res.redirect('/mi-perfil');
+    }
+};
+
+export const eliminarComentario = async (req, res) => {
+    try {
+        const { id_comentario } = req.params;
+        const usuarioId = req.session.usuario.id;
+
+        const comentario = await Comentarios.findByPk(id_comentario);
+
+        if (comentario) {
+            const publicacion = await Publicacion.findByPk(comentario.publicacion_id);
+            
+            if (publicacion && publicacion.usuario_id === usuarioId) {
+                await comentario.destroy(); 
+            }
+        }
+
+        res.redirect('/mi-perfil/denuncias');
+    } catch (error) {
+        console.error("Error al eliminar comentario:", error);
+        res.redirect('/mi-perfil/denuncias');
     }
 };

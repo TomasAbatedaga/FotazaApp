@@ -16,6 +16,11 @@ import { mostrarFormularioEdicion } from '../controllers/publicacionController.j
 import { actualizarPublicacion } from '../controllers/publicacionController.js';
 import { mostrarPerfil } from '../controllers/publicacionController.js';
 import { eliminarPublicacion } from '../controllers/publicacionController.js';
+import { denunciarComentario } from '../controllers/publicacionController.js';
+import { mostrarDenunciasComentarios } from '../controllers/publicacionController.js';
+import { eliminarComentario } from '../controllers/publicacionController.js';
+
+
 
 const router = express.Router();
 
@@ -34,6 +39,9 @@ router.get('/publicacion/:id_publicacion/editar', estaLogueado, mostrarFormulari
 router.post('/publicacion/:id_publicacion/editar', estaLogueado, actualizarPublicacion);
 router.get('/mi-perfil', estaLogueado, mostrarPerfil);
 router.post('/publicacion/:id_publicacion/eliminar', estaLogueado, eliminarPublicacion);
+router.post('/comentario/:id_comentario/denunciar', estaLogueado, denunciarComentario);
+router.get('/mi-perfil/denuncias', estaLogueado, mostrarDenunciasComentarios);
+router.post('/comentario/:id_comentario/eliminar', estaLogueado, eliminarComentario);
 
 
 export default router;

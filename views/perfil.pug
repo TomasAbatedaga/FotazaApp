@@ -4,6 +4,9 @@ block contenido
   div(style="max-width: 1000px; margin: 40px auto; padding: 20px;")
     h2(style="color: #8a5a44; text-align: center; margin-bottom: 30px;") Mi Perfil
 
+    div(style="text-align: center; margin-bottom: 30px;")
+      a.btn-oscuro(href="/mi-perfil/denuncias" style="background-color: #cc0000; border-color: #cc0000; text-decoration: none;") Ver Comentarios Denunciados
+    
     if fotos && fotos.length > 0
       div.galeria
         each foto in fotos
