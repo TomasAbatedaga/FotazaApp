@@ -2,7 +2,7 @@ extends layout
 
 block contenido
   div(style="max-width: 600px; margin: 40px auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);")
-    h2(style="color: #8a5a44; text-align: center; margin-bottom: 20px;") ✏️ Editar Publicación
+    h2(style="color: #8a5a44; text-align: center; margin-bottom: 20px;") Editar Publicación
 
     form(action=`/publicacion/${foto.id}/editar` method="POST" style="display: flex; flex-direction: column; gap: 15px;")
       
@@ -13,6 +13,20 @@ block contenido
       div
         label(style="font-weight: bold; color: #555;") Descripcion:
         textarea(name="descripcion" rows="4" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;")= foto.descripcion
+
+      div(style="border-top: 1px solid #eee; padding-top: 15px;")
+        label(style="font-weight: bold; color: #8a5a44;") Etiquetas actuales y disponibles:
+        div(style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; background: #faf4ed; padding: 10px; border-radius: 5px;")
+          if etiquetas && etiquetas.length > 0
+            each et in etiquetas
+              - const laTiene = foto.etiquetas && foto.etiquetas.some(fe => fe.id === et.id)
+              label(style="font-size: 0.9em; cursor: pointer; display: flex; align-items: center;")
+                input(type="checkbox" name="etiquetas" value=et.id checked=laTiene style="margin-right: 5px;")
+                | #{et.nombre}
+      
+      div
+        label(for="nuevas_etiquetas" style="font-weight: bold; color: #8a5a44;") Crear nuevas etiquetas:
+        input(type="text" name="nuevas_etiquetas" placeholder="Ej: viaje, mascota, playa (separadas por coma)" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; margin-top: 5px;")
 
       div(style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 10px;")
         a.btn-claro(href=`/foto/${foto.id}` style="text-decoration: none; padding: 10px 15px; border-radius: 5px; color: #333; background: #eee;") Cancelar

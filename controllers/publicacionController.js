@@ -368,7 +368,9 @@ export const denunciarPublicacion = async (req, res) => {
 export const mostrarFormularioEdicion = async (req, res) => {
     try {
         const { id_publicacion } = req.params;
-        const publicacion = await Publicacion.findByPk(id_publicacion);
+        const publicacion = await Publicacion.findByPk(id_publicacion, {
+            include: [{ model: Etiquetas, as: 'etiquetas' }]
+        });
 
         if (!publicacion || publicacion.usuario_id !== req.session.usuario.id) {
             return res.redirect('/');
@@ -393,9 +395,12 @@ export const mostrarFormularioEdicion = async (req, res) => {
             });
         }
 
+        const todasLasEtiquetas = await Etiquetas.findAll();
+
         res.render('editarFoto', {
             usuario: req.session.usuario,
-            foto: publicacion
+            foto: publicacion,
+            etiquetas: todasLasEtiquetas
         });
 
     } catch (error) {
@@ -407,15 +412,38 @@ export const mostrarFormularioEdicion = async (req, res) => {
 export const actualizarPublicacion = async (req, res) => {
     try {
         const { id_publicacion } = req.params;
-        const { titulo, descripcion } = req.body;
+        const { titulo, descripcion, etiquetas, nuevas_etiquetas } = req.body;
         
         const cantidadDenuncias = await Denuncia.count({ where: { publicacion_id: id_publicacion } });
         
         if (cantidadDenuncias === 0) {
-            await Publicacion.update(
-                { titulo, descripcion },
-                { where: { id: id_publicacion, usuario_id: req.session.usuario.id } }
-            );
+            const publicacion = await Publicacion.findOne({
+                where: { id: id_publicacion, usuario_id: req.session.usuario.id }
+            });
+
+            if (publicacion) {
+                await publicacion.update({ titulo, descripcion });
+
+                let idsEtiquetasFinales = [];
+
+                if (etiquetas) {
+                    const etiquetasArray = Array.isArray(etiquetas) ? etiquetas : [etiquetas];
+                    idsEtiquetasFinales = [...etiquetasArray];
+                }
+
+                if (nuevas_etiquetas && nuevas_etiquetas.trim() !== '') {
+                    const arrayNuevas = nuevas_etiquetas.split(',').map(tag => tag.trim());
+                    for (const nombreTag of arrayNuevas) {
+                        if (nombreTag !== '') {
+                            const [etiquetaDB] = await Etiquetas.findOrCreate({
+                                where: { nombre: nombreTag }
+                            });
+                            idsEtiquetasFinales.push(etiquetaDB.id);
+                        }
+                    }
+                }
+                await publicacion.setEtiquetas(idsEtiquetasFinales);
+            }
         }
 
         res.redirect(`/foto/${id_publicacion}`);
