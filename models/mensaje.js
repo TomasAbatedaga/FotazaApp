@@ -14,6 +14,10 @@ const Mensaje = sequelize.define('Mensaje', {
         type: DataTypes.INTEGER,
         allowNull: false
     },
+    publicacion_id: {
+        type: DataTypes.INTEGER,
+        allowNull: true 
+    },
     texto: {
         type: DataTypes.TEXT,
         allowNull: false

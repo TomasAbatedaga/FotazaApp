@@ -7,6 +7,7 @@ mixin nav(usuario)
         if usuario.rol === 'validador' || usuario.rol === 'admin'
           a.btn-oscuro(href="/validador/panel" style="background-color: #cc0000; border-color: #cc0000; margin-right: 10px;") Panel Validador
         a.btn-claro(href="/mi-perfil" style="margin-right: 10px;") Mi Perfil
+        a.btn-claro(href="/mensajes" style="margin-right: 10px;") Mensajes
         a.btn-claro(href="/nuevaFoto") Subir Foto
         a.btn-claro(href="/auth/logout") Cerrar Sesion
       else

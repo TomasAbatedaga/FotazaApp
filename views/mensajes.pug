@@ -1,0 +1,30 @@
+extends layout
+
+block contenido
+  div(style="max-width: 800px; margin: 40px auto; padding: 20px;")
+    h2(style="color: #8a5a44; text-align: center;") Mis Mensajes Privados
+
+    if mensajes && mensajes.length > 0
+      div(style="display: flex; flex-direction: column; gap: 15px;")
+        each msg in mensajes
+          - const esMio = msg.emisor_id === usuario.id
+          
+          div(style=`background: ${esMio ? '#e6f2ff' : '#fdf5f5'}; padding: 15px; border-radius: 8px; border-left: 4px solid ${esMio ? '#0066cc' : '#cc0000'}; box-shadow: 0 1px 3px rgba(0,0,0,0.1);`)
+            div(style="display: flex; justify-content: space-between; margin-bottom: 10px;")
+              if esMio
+                strong(style="color: #0066cc;") Enviado a: #{msg.Receptor.nombre_usuario}
+              else
+                strong(style="color: #cc0000;") Recibido de: #{msg.Emisor.nombre_usuario} (#{msg.Emisor.email})
+              
+              span(style="color: #999; font-size: 0.8em;") #{new Date(msg.fecha_envio).toLocaleString('es-AR', { hour12: false })}
+            
+            p(style="margin: 0; color: #333;")= msg.texto
+            
+            if !esMio
+              form(action="/mensaje/responder" method="POST" style="margin-top: 15px; display: flex; gap: 10px;")
+                input(type="hidden" name="receptor_id" value=msg.emisor_id)
+                input(type="text" name="texto" required placeholder="Escribir una respuesta..." style="flex: 1; padding: 8px; border-radius: 5px; border: 1px solid #ccc;")
+                button.btn-oscuro(type="submit" style="padding: 8px 15px; border: none; border-radius: 5px; cursor: pointer;") Enviar
+    else
+      div(style="background: #eee; padding: 20px; border-radius: 5px; text-align: center;")
+        h3(style="color: #666;") No tienes mensajes en tu bandeja de entrada.

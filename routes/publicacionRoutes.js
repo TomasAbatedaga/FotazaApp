@@ -19,6 +19,9 @@ import { eliminarPublicacion } from '../controllers/publicacionController.js';
 import { denunciarComentario } from '../controllers/publicacionController.js';
 import { mostrarDenunciasComentarios } from '../controllers/publicacionController.js';
 import { eliminarComentario } from '../controllers/publicacionController.js';
+import { meInteresa } from '../controllers/mensajeController.js';
+import { mostrarMensajes } from '../controllers/mensajeController.js';
+import { responderMensaje } from '../controllers/mensajeController.js';
 
 
 
@@ -42,6 +45,9 @@ router.post('/publicacion/:id_publicacion/eliminar', estaLogueado, eliminarPubli
 router.post('/comentario/:id_comentario/denunciar', estaLogueado, denunciarComentario);
 router.get('/mi-perfil/denuncias', estaLogueado, mostrarDenunciasComentarios);
 router.post('/comentario/:id_comentario/eliminar', estaLogueado, eliminarComentario);
+router.post('/publicacion/:id_publicacion/me-interesa', estaLogueado, meInteresa);
+router.get('/mensajes', estaLogueado, mostrarMensajes);
+router.post('/mensaje/responder', estaLogueado, responderMensaje);
 
 
 export default router;

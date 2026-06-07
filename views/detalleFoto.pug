@@ -84,7 +84,9 @@ block contenido
           div(style="display: flex; gap: 5px;")
             select(disabled style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; opacity: 0.5; cursor: not-allowed;")
               option(value="" disabled selected) Calificar...
-          button.btn-accion(disabled style="opacity: 0.5; cursor: not-allowed;") Descargar
+        if usuario && usuario.id !== foto.usuario_id
+          form(action=`/publicacion/${foto.id}/me-interesa` method="POST" style="display: inline-block; margin-left: 10px;")
+            button.btn-accion(type="submit" style="background-color: #28a745; color: white; border: none;") Me interesa
 
     div.acciones-secundarias(style="margin-top: 20px; text-align: right;")
         if usuario
