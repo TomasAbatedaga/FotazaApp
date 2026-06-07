@@ -7,6 +7,7 @@ block contenido
     .sidebar ul { list-style: none; padding: 0; }
     .sidebar a { text-decoration: none; color: #555; display: block; margin-bottom: 10px; }
     .sidebar a:hover { color: #8a5a44; font-weight: bold; }
+    .sidebar a.activo { background-color: #8a5a44; color: white; font-weight: bold; }
     .galeria-contenedor { flex: 1; padding-left: 20px; display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
     .tarjeta-foto { text-decoration: none; color: inherit; display: block; }
     .contenedor-imagen { overflow: hidden; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
@@ -17,21 +18,39 @@ block contenido
 
   div.contenedor-principal
     aside.sidebar
-      h3 Filtros
+      h3 Categorias
       ul
-        li: a(href="/") Ver Todas
-        li: a(href="/?categoria=Naturaleza") Naturaleza
-        li: a(href="/?categoria=Urbano") Urbano
-        li: a(href="/?categoria=Animales") Animales
+        li
+          a(href=`/?orden=${filtrosActuales.orden || ''}` class=(!filtrosActuales.categoriaSeleccionada ? "activo" : "")) Ver Todas
+        
+        if etiquetasSidebar && etiquetasSidebar.length > 0
+          each tag in etiquetasSidebar
+            li
+              a(href=`/?categoria=${tag}&orden=${filtrosActuales.orden || ''}` class=(filtrosActuales.categoriaSeleccionada === tag ? "activo" : ""))= tag
+
+      h3 Ordenar por
+      ul
+        li
+          a(href=`/?categoria=${filtrosActuales.categoriaSeleccionada || ''}&orden=recientes` class=(!filtrosActuales.orden || filtrosActuales.orden !== 'antiguas' ? "activo" : "")) Más recientes
+        li
+          a(href=`/?categoria=${filtrosActuales.categoriaSeleccionada || ''}&orden=antiguas` class=(filtrosActuales.orden === 'antiguas' ? "activo" : "")) Más antiguas
 
     main.galeria-contenedor
-      each foto in fotos
-        a.tarjeta-foto(href=`/foto/${foto.id}`)
-          div.contenedor-imagen
-            img(src=foto.imagenes[0].url_imagen alt=foto.titulo)
-          div.info-foto
-            h4= foto.titulo
-            p Por: #{foto.Usuario.nombre_usuario}
-            if foto.etiquetas
-              each etiqueta in foto.etiquetas
-                span.etiqueta-pill= etiqueta.nombre
+      if fotos && fotos.length > 0
+        each foto in fotos
+          a.tarjeta-foto(href=`/foto/${foto.id}`)
+            div.contenedor-imagen
+              if foto.imagenes && foto.imagenes.length > 0
+                img(src=foto.imagenes[0].url_imagen alt=foto.titulo)
+              else
+                div(style="width: 100%; height: 100%; background: #eee; display: flex; align-items: center; justify-content: center; color: #999;") Sin imagen
+            div.info-foto
+              h4(style="margin: 0 0 5px 0;")= foto.titulo
+              p(style="margin: 0; color: #666; font-size: 0.9em;") Por: #{foto.Usuario.nombre_usuario}
+              if foto.etiquetas
+                each etiqueta in foto.etiquetas
+                  span.etiqueta-pill= etiqueta.nombre
+      else
+        div(style="grid-column: 1 / -1; text-align: center; padding: 50px; color: #999;")
+          h2 No hay resultados
+          p No se encontraron fotos con los filtros seleccionados.

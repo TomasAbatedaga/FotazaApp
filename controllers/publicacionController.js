@@ -4,21 +4,27 @@ import { Op } from 'sequelize';
 export const mostrarInicio = async (req, res) => {
     try {
         const categoriaSeleccionada = req.query.categoria;
+        const orden = req.query.orden;
+        const todasLasEtiquetas = await Etiquetas.findAll();
+        const etiquetasUnicas = [...new Set(todasLasEtiquetas.map(e => e.nombre))];
 
         let opcionesDeBusqueda = {
+            where: { estado: 'activa'},
             include: [
                 { model: Imagen, as: 'imagenes',
                     where: req.session.usuario ? {} : { licencia: 'sin_copyright'},
                     required: !req.session.usuario ? true : false },
                 { model: Usuario, as: 'Usuario', attributes: ['nombre_usuario'] }
-            ]
+            ],
+            order: [['fecha_publicacion', orden === 'antiguas' ? 'ASC' : 'DESC']]
         };
 
         if (categoriaSeleccionada) {
             opcionesDeBusqueda.include.push({
                 model: Etiquetas,
                 as: 'etiquetas', 
-                where: { nombre: categoriaSeleccionada } 
+                where: { nombre: categoriaSeleccionada },
+                required: true
             });
         } else {
             opcionesDeBusqueda.include.push({
@@ -28,12 +34,13 @@ export const mostrarInicio = async (req, res) => {
         }
 
         const publicaciones = await Publicacion.findAll(opcionesDeBusqueda);
-        const fotosPlanas = publicaciones.map(foto => foto.toJSON());
+        const fotosPlanas = publicaciones.map(foto => foto.toJSON ? foto.toJSON() : foto);
 
         res.render('index', { 
             usuario: req.session.usuario,
             fotos: fotosPlanas,
-            categoriaActiva: categoriaSeleccionada,
+            etiquetasSidebar: etiquetasUnicas,
+            filtrosActuales: {categoriaSeleccionada, orden}
         });
     } catch (error) {
         console.error("Error al obtener publicaciones:", error);

@@ -6,16 +6,20 @@ mixin nav(usuario)
       button(type="submit" style="background: #8a5a44; color: white; border: none; padding: 8px 15px; border-radius: 0 20px 20px 0; cursor: pointer;") Buscar
     div.navbar-menu
       if usuario
-        span Hola, #{usuario.nombre_usuario}
+        a.btn-oscuro(href="/nuevaFoto") Subir Foto
+        
         if usuario.rol === 'validador' || usuario.rol === 'admin'
-          a.btn-oscuro(href="/validador/panel" style="background-color: #cc0000; border-color: #cc0000; margin-right: 10px;") Panel Validador
-        a.btn-claro(href="/mi-perfil" style="margin-right: 10px;") Mi Perfil
-        a.btn-claro(href="/feed" style="margin-right: 10px;") Mi Feed
-        a.btn-claro(href="/mensajes" style="margin-right: 10px;") Mensajes
-        a.btn-claro(href="/notificaciones" style="margin-right: 10px;") Notificaciones
-        a.btn-claro(href="/colecciones" style="margin-right: 10px;") Favoritos
-        a.btn-claro(href="/nuevaFoto") Subir Foto
-        a.btn-claro(href="/auth/logout") Cerrar Sesion
+          a.btn-oscuro(href="/validador/panel" style="background-color: #cc0000; border-color: #cc0000; margin-left: 10px;") Validador
+        
+        div.dropdown
+          button.btn-usuario Hola, #{usuario.nombre_usuario} ▼
+          div.dropdown-contenido
+            a(href="/mi-perfil") Mi Perfil
+            a(href="/feed") Mi Feed
+            a(href="/mensajes") Mensajes
+            a(href="/notificaciones") Notificaciones
+            a(href="/colecciones") Favoritos
+            a(href="/auth/logout" style="color: #cc0000; font-weight: bold;") Cerrar Sesión
       else
         a.btn-claro(href="/auth/login") Iniciar Sesion
         a.btn-oscuro(href="/auth/registro") Crear Cuenta
