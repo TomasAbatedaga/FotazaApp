@@ -1,4 +1,5 @@
 import { Publicacion, Imagen, Usuario, Etiquetas, Valoracion, Comentarios, Denuncia, DenunciaComentario } from '../models/index.js';
+import { Op } from 'sequelize';
 
 export const mostrarInicio = async (req, res) => {
     try {
@@ -504,3 +505,82 @@ export const eliminarComentario = async (req, res) => {
         res.redirect('/mi-perfil/denuncias');
     }
 };
+
+
+export const realizarBusqueda = async (req, res) => {
+    try {
+        const consulta = req.query.q;
+        
+        if (!consulta || consulta.trim() === '') {
+            return res.redirect('/');
+        }
+
+        const terminoDeBusqueda = `${consulta}%`;
+
+        const usuariosEncontrados = await Usuario.findAll({
+            where: {
+                nombre_usuario: { [Op.iLike]: terminoDeBusqueda }
+            },
+            attributes: ['id', 'nombre_usuario']
+        });
+
+        const publicacionesEncontradas = await Publicacion.findAll({
+            where: {
+                estado: 'activa',
+                [Op.or]: [
+                    { titulo: { [Op.iLike]: terminoDeBusqueda } }
+                ]
+            },
+            include: [
+                {
+                    model: Imagen,
+                    as: 'imagenes',
+                    where: req.session.usuario ? {} : { licencia: 'sin_copyright' },
+                    required: !req.session.usuario ? true : false
+                },
+                { model: Usuario, as: 'Usuario', attributes: ['nombre_usuario'] }
+            ],
+            order: [['fecha_publicacion', 'DESC']]
+        });
+
+        res.render('busqueda', {
+            usuario: req.session.usuario,
+            consulta: consulta,
+            usuarios: usuariosEncontrados,
+            fotos: publicacionesEncontradas
+        });
+
+    } catch (error) {
+        console.error("Error en la busqueda:", error);
+        res.redirect('/');
+    }
+};
+
+export const mostrarPerfilUsuarioBusqueda = async (req, res) => {
+    try {
+        const { nombre_usuario } = req.params;
+
+        const usuarioObjetivo = await Usuario.findOne({ 
+            where: { nombre_usuario: nombre_usuario } 
+        });
+
+        if (!usuarioObjetivo) {
+            return res.redirect('/');
+        }
+
+        const publicaciones = await Publicacion.findAll({
+            where: { usuario_id: usuarioObjetivo.id },
+            include: [{ model: Imagen, as: 'imagenes' }]
+        });
+
+        res.render('perfilPublico', {
+            usuario: req.session.usuario,
+            usuarioObjetivo: usuarioObjetivo,
+            fotos: publicaciones
+        });
+    } catch (error) {
+        console.error("Error al cargar perfil:", error);
+        res.redirect('/');
+    }
+};
+

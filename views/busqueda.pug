@@ -1,0 +1,33 @@
+extends layout
+
+block contenido
+  div(style="max-width: 1000px; margin: 40px auto; padding: 20px;")
+    h2(style="color: #333; margin-bottom: 30px;") Resultados para: 
+      span(style="color: #8a5a44;") "#{consulta}"
+
+    h3(style="border-bottom: 2px solid #eee; padding-bottom: 10px; color: #555;") Perfiles Encontrados
+    
+    if usuarios && usuarios.length > 0
+      div(style="display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 40px;")
+        each user in usuarios
+            a(href=`/usuario/${user.nombre_usuario}` style="text-decoration: none;")
+                div(style="background: #fff; padding: 15px 25px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border-left: 4px solid #8a5a44;")
+                    strong= user.nombre_usuario
+    else
+      p(style="color: #999; margin-bottom: 40px;") No se encontraron usuarios.
+
+    h3(style="border-bottom: 2px solid #eee; padding-bottom: 10px; color: #555;") Publicaciones Encontradas
+    
+    if fotos && fotos.length > 0
+      div.galeria(style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;")
+        each foto in fotos
+          div.tarjeta-foto(style="background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1);")
+            a(href=`/foto/${foto.id}` style="text-decoration: none; color: inherit;")
+              div.contenedor-imagen
+                if foto.imagenes && foto.imagenes.length > 0
+                  img(src=foto.imagenes[0].url_imagen alt=foto.titulo style="width: 100%; height: 200px; object-fit: cover;")
+              div.info-foto(style="padding: 15px;")
+                h4(style="margin: 0 0 5px 0; color: #333;")= foto.titulo
+                p(style="margin: 0; color: #666; font-size: 0.9em;") Por: #{foto.Usuario.nombre_usuario}
+    else
+      p(style="color: #999;") No se encontraron publicaciones.

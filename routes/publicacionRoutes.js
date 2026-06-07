@@ -22,8 +22,8 @@ import { eliminarComentario } from '../controllers/publicacionController.js';
 import { meInteresa } from '../controllers/mensajeController.js';
 import { mostrarMensajes } from '../controllers/mensajeController.js';
 import { responderMensaje } from '../controllers/mensajeController.js';
-
-
+import { realizarBusqueda } from '../controllers/publicacionController.js';
+import { mostrarPerfilUsuarioBusqueda } from '../controllers/publicacionController.js';
 
 const router = express.Router();
 
@@ -48,6 +48,7 @@ router.post('/comentario/:id_comentario/eliminar', estaLogueado, eliminarComenta
 router.post('/publicacion/:id_publicacion/me-interesa', estaLogueado, meInteresa);
 router.get('/mensajes', estaLogueado, mostrarMensajes);
 router.post('/mensaje/responder', estaLogueado, responderMensaje);
-
+router.get('/buscar', realizarBusqueda);
+router.get('/usuario/:nombre_usuario', mostrarPerfilUsuarioBusqueda);
 
 export default router;

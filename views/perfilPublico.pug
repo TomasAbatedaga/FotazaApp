@@ -1,0 +1,13 @@
+extends layout
+
+block contenido
+  div(style="max-width: 1000px; margin: 40px auto; padding: 20px;")
+    h2(style="color: #8a5a44; text-align: center;") Perfil de #{usuarioObjetivo.nombre_usuario}
+    
+    if fotos && fotos.length > 0
+      div.galeria(style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; margin-top: 30px;")
+        each foto in fotos
+          a(href=`/foto/${foto.id}`)
+            img(src=foto.imagenes[0].url_imagen style="width: 100%; height: 250px; object-fit: cover; border-radius: 8px;")
+    else
+      p(style="text-align: center; color: #666;") Este usuario aun no tiene publicaciones.

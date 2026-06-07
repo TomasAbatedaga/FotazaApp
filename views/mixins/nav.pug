@@ -1,6 +1,9 @@
 mixin nav(usuario)
   header.navbar
     a.navbar-logo(href="/") Fotaza 2
+    form(action="/buscar" method="GET" style="display: flex; flex: 1; max-width: 400px; margin: 0 20px;")
+      input(type="text" name="q" placeholder="Buscar perfiles o publicaciones..." required style="flex: 1; padding: 8px 15px; border: 1px solid #ccc; border-radius: 20px 0 0 20px; outline: none;")
+      button(type="submit" style="background: #8a5a44; color: white; border: none; padding: 8px 15px; border-radius: 0 20px 20px 0; cursor: pointer;") Buscar
     div.navbar-menu
       if usuario
         span Hola, #{usuario.nombre_usuario}
