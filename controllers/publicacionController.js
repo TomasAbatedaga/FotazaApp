@@ -244,6 +244,12 @@ export const darMeGusta = async (req, res) => {
         const { id_publicacion } = req.params;
         const usuarioId = req.session.usuario.id;
 
+        const foto = await Publicacion.findByPk(id_publicacion);
+
+        if (!foto || foto.usuario_id === usuarioId) {
+            return res.redirect(req.get('referer') || '/');
+        }
+
         const [voto, created] = await Valoracion.findOrCreate({
             where: { usuario_id: usuarioId, publicacion_id: id_publicacion },
             defaults: { me_gusta: true }
@@ -253,9 +259,7 @@ export const darMeGusta = async (req, res) => {
             await voto.update({ me_gusta: !voto.me_gusta });
         }
 
-        const foto = await Publicacion.findByPk(id_publicacion);
-
-        if (foto && foto.usuario_id !== usuarioId && (created || voto.me_gusta)) {
+        if (created || voto.me_gusta) {
             await Notificacion.create({
                 usuario_receptor_id: foto.usuario_id,
                 usuario_generador_id: usuarioId,
@@ -277,6 +281,12 @@ export const valorarPublicacion = async (req, res) => {
         const { puntaje } = req.body;
         const usuarioId = req.session.usuario.id;
 
+        const foto = await Publicacion.findByPk(id_publicacion);
+
+        if (!foto || foto.usuario_id === usuarioId) {
+            return res.redirect(req.get('referer') || '/');
+        }
+
         const [voto, created] = await Valoracion.findOrCreate({
             where: { usuario_id: usuarioId, publicacion_id: id_publicacion },
             defaults: { puntaje: parseInt(puntaje) }
@@ -286,9 +296,7 @@ export const valorarPublicacion = async (req, res) => {
             await voto.update({ puntaje: parseInt(puntaje) });
         }
 
-        const foto = await Publicacion.findByPk(id_publicacion);
-
-        if (foto && foto.usuario_id !== usuarioId && created) {
+        if (created) {
             await Notificacion.create({
                 usuario_receptor_id: foto.usuario_id,
                 usuario_generador_id: usuarioId,

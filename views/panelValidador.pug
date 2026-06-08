@@ -27,11 +27,11 @@ block contenido
               //- Los Botones del Juez
               div(style="margin-top: 20px; display: flex; gap: 10px;")
                 form(action=`/validador/baja/${pub.id}` method="POST")
-                  button(type="submit" style="background: #cc0000; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer;") ⛔ Dar de Baja Foto
+                  button(type="submit" style="background: #cc0000; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer;") Dar de Baja Foto
 
-                form(action=`/validador/desestimar/${pub.id}` method="POST")
-                  button(type="submit" style="background: #ccc; color: #333; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer;") ♻️ Desestimar Denuncias
+                form(action=`/validador/rechazar/${pub.id}` method="POST")
+                  button(type="submit" style="background: #ccc; color: #333; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer;") Desestimar Denuncias
 
     else
       div(style="background: #d4edda; color: #155724; padding: 20px; border-radius: 5px; text-align: center;")
-        h3 ¡Buen trabajo! No hay publicaciones en peligro por el momento.
+        h3 No hay publicaciones en peligro por el momento.
