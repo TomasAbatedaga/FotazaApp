@@ -1,17 +1,17 @@
 import sequelize from '../config/db.js';
 
 import Usuario from './Usuario.js';
-import Publicacion from './Publicacion.js';
-import Imagen from './Imagen.js';
-import Comentarios from './Comentarios.js';
-import Valoracion from './Valoracion.js';
-import Denuncia from './Denuncia.js';
+import Publicacion from './publicacion.js';
+import Imagen from './imagen.js';
+import Comentarios from './comentarios.js';
+import Valoracion from './valoracion.js';
+import Denuncia from './denuncia.js';
 import Coleccion from './Coleccion.js';
-import Etiquetas from './Etiquetas.js';
-import Mensaje from './Mensaje.js';
+import Etiquetas from './etiquetas.js';
+import Mensaje from './mensaje.js';
 import Seguidor from './Seguidores.js';
 import DenunciaComentario from './DenunciaComentario.js';
-import Notificacion from './Notificacion.js';
+import Notificacion from './notificacion.js';
 import ColeccionPublicacion from './ColeccionPublicacion.js';
 
 // Usuario 1...N Publicacion 
