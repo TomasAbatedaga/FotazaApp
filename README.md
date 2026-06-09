@@ -49,7 +49,7 @@ SESSION_SECRET=claveSecretaSession
 
 ### 4. Base de Datos
 * Crea una base de datos en PostgreSQL llamada **FotazaApp**.
-* Ejecutar: `run db:init` para crear las tablas y la seed de prueba
+* Ejecutar: `npm run db:init` para crear las tablas y la seed de prueba
 
 
 ### 5. Ejecutar la aplicación
@@ -88,7 +88,7 @@ Para evaluar la aplicación, se adjuntan los siguientes usuarios pre-cargados co
   * **Contraseña:** [123456]
   * **Permisos:** Subir fotos, dar likes, comentar, puntuar con estrellas, crear colecciones/favoritos, denunciar.
 
-  * 👤 **Usuario Estándar 3:**
+  * 👤 **Usuario Estándar 4:**
   * **Usuario:** [lucas, Rol(usuario)]
   * **Email:** [lucas@test.com]
   * **Contraseña:** [123456]
