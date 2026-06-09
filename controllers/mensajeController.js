@@ -1,4 +1,4 @@
-import { Mensaje, Publicacion, Usuario } from '../models/index.js';
+import { Mensaje, Publicacion, Usuario, Notificacion } from '../models/index.js';
 import { Op } from 'sequelize';
 
 export const meInteresa = async (req, res) => {
