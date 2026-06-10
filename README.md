@@ -6,7 +6,7 @@ Aplicación web desarrollada como Trabajo Práctico Integrador. Es una plataform
 
 ## 🚀 Despliegue en Producción
 La aplicación se encuentra desplegada y funcionando en un servidor real:
-* **URL de la App:** [link]
+* **URL de la App:** https://fotazaapp.onrender.com/
 
 ---
 
@@ -26,7 +26,7 @@ Para correr este proyecto en un entorno local, sigue estos pasos:
 
 ### 1. Clonar el repositorio
 ```bash
-git clone [TU_LINK_DE_GITHUB]
+git clone https://github.com/TomasAbatedaga/FotazaApp.git
 cd FotazaApp
 ```
 
