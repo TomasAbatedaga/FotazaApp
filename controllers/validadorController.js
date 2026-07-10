@@ -1,9 +1,13 @@
 import { Publicacion, Denuncia, Usuario, Imagen } from '../models/index.js';
+import { Op } from 'sequelize';
 
 export const mostrarPanel = async (req, res) => {
     try {
+        const validadorId = req.session.usuario.id;
         const publicaciones = await Publicacion.findAll({
-            where: { estado: 'activa' },
+            where: { estado: 'activa',
+            usuario_id: { [Op.ne]: validadorId }
+            },
             include: [
                 { model: Imagen, as: 'imagenes' },
                 { model: Usuario, as: 'Usuario', attributes: ['nombre_usuario'] },
@@ -31,6 +35,12 @@ export const mostrarPanel = async (req, res) => {
 export const rechazarDenuncias = async (req, res) => {
     try {
         const { id_publicacion } = req.params;
+        const validadorId = req.session.usuario.id;
+        const publicacion = await Publicacion.findByPk(id_publicacion);
+        if (!publicacion || publicacion.usuario_id === validadorId) {
+            return res.redirect('/validador/panel');
+        }
+
         await Denuncia.update(
             { estado: 'rechazada' },
             { where: { publicacion_id: id_publicacion, estado: 'pendiente' } }
@@ -45,9 +55,12 @@ export const rechazarDenuncias = async (req, res) => {
 export const darDeBaja = async (req, res) => {
     try {
         const { id_publicacion } = req.params;
+        const validadorId = req.session.usuario.id;
 
         const publicacion = await Publicacion.findByPk(id_publicacion);
-        if (!publicacion) return res.redirect('/validador/panel');
+        if (!publicacion || publicacion.usuario_id === validadorId) {
+            return res.redirect('/validador/panel');
+        }
 
         await publicacion.update({ estado: 'inactiva' });
         await Denuncia.update(

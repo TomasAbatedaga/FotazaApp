@@ -13,6 +13,7 @@ import Seguidor from './Seguidores.js';
 import DenunciaComentario from './DenunciaComentario.js';
 import Notificacion from './notificacion.js';
 import ColeccionPublicacion from './ColeccionPublicacion.js';
+import Rol from './Rol.js';
 
 // Usuario 1...N Publicacion 
 Usuario.hasMany(Publicacion, { foreignKey: 'usuario_id', onDelete: 'CASCADE' });
@@ -69,6 +70,10 @@ Notificacion.belongsTo(Usuario, { foreignKey: 'usuario_generador_id', as: 'Gener
 // La foto a la que hace referencia el aviso
 Publicacion.hasMany(Notificacion, { foreignKey: 'publicacion_id', onDelete: 'CASCADE' });
 Notificacion.belongsTo(Publicacion, { foreignKey: 'publicacion_id' });
+
+// Un Rol tiene muchos Usuarios, un Usuario pertenece a un Rol
+Rol.hasMany(Usuario, { foreignKey: 'rol_id', as: 'usuarios' });
+Usuario.belongsTo(Rol, { foreignKey: 'rol_id', as: 'Rol' });
 
 // Publicacion N...M Coleccion
 Coleccion.belongsToMany(Publicacion, { 
@@ -143,5 +148,6 @@ export {
     Seguidor,
     DenunciaComentario,
     Notificacion,
-    ColeccionPublicacion
+    ColeccionPublicacion,
+    Rol
 };

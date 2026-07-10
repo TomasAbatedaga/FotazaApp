@@ -1,5 +1,5 @@
 import bcrypt from 'bcryptjs';
-import { Usuario } from '../models/index.js';
+import { Usuario, Rol } from '../models/index.js';
 
 export const registrarUsuario = async (req, res) => {
     try {
@@ -26,12 +26,14 @@ export const registrarUsuario = async (req, res) => {
 
         const salt = await bcrypt.genSalt(10);
         const contraseniaHasheada = await bcrypt.hash(password, salt);
+        
+        const rolBasico = await Rol.findOne({ where: { nombre: 'usuario' } });
 
         const nuevoUsuario = await Usuario.create({
             nombre_usuario: nombre_usuario,
             email: email,
             password: contraseniaHasheada, 
-            rol: 'usuario',
+            rol_id: rolBasico.id,
             estado: 'activo'
         });
 
@@ -57,7 +59,10 @@ export const iniciarSesion = async (req, res) => {
             });
         }
 
-        const usuario = await Usuario.findOne({ where: { email: email } });
+        const usuario = await Usuario.findOne({ 
+            where: { email: email },
+            include: [{ model: Rol, as: 'Rol' }]
+        });
         
         if (!usuario) {
             return res.render('login', { 
@@ -76,7 +81,7 @@ export const iniciarSesion = async (req, res) => {
         req.session.usuario = {
             id: usuario.id,
             nombre_usuario: usuario.nombre_usuario,
-            rol: usuario.rol
+            rol: usuario.Rol.nombre
         };
 
         return res.redirect('/');

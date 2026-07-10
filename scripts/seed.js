@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import bcrypt from 'bcryptjs';
-import { Usuario, Etiquetas, Publicacion, Imagen, Comentarios, Valoracion, Denuncia, Seguidor } from '../models/index.js'; 
+import { Rol, Usuario, Etiquetas, Publicacion, Imagen, Comentarios, Valoracion, Denuncia, Seguidor } from '../models/index.js'; 
 
 export const sembrarDatos = async () => {
     try {
@@ -26,12 +26,20 @@ export const sembrarDatos = async () => {
 
         const passwordHasheada = await bcrypt.hash('123456', 10);
 
+        const roles = await Rol.bulkCreate([
+            { nombre: 'usuario' },
+            { nombre: 'validador' },
+            { nombre: 'admin' }
+        ], { returning: true });
+
+        console.log("✔️ Roles creados.");
+
         const usuarios = await Usuario.bulkCreate([
-            { nombre_usuario: 'admin', email: 'admin@test.com', password: passwordHasheada, rol: 'validador' },
-            { nombre_usuario: 'tomas', email: 'tomas@test.com', password: passwordHasheada, rol: 'usuario' },
-            { nombre_usuario: 'daniel', email: 'daniel@test.com', password: passwordHasheada, rol: 'usuario' },
-            { nombre_usuario: 'facundo', email: 'facundo@test.com', password: passwordHasheada, rol: 'usuario' },
-            { nombre_usuario: 'lucas', email: 'lucas@test.com', password: passwordHasheada, rol: 'usuario' }
+            { nombre_usuario: 'admin', email: 'admin@test.com', password: passwordHasheada, rol_id: roles[1].id },
+            { nombre_usuario: 'tomas', email: 'tomas@test.com', password: passwordHasheada, rol_id: roles[0].id },
+            { nombre_usuario: 'daniel', email: 'daniel@test.com', password: passwordHasheada, rol_id: roles[0].id },
+            { nombre_usuario: 'facundo', email: 'facundo@test.com', password: passwordHasheada, rol_id: roles[0].id },
+            { nombre_usuario: 'lucas', email: 'lucas@test.com', password: passwordHasheada, rol_id: roles[0].id }
         ], { returning: true });
 
         console.log("5 Usuarios creados.");
