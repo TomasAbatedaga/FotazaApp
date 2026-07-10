@@ -12,7 +12,7 @@ block estilos
     .aviso-invitado { background-color: #fce4e4; color: #cc0000; padding: 10px; border-radius: 5px; margin-bottom: 20px; }
     .imagen-grande { width: 100%; height: 100%; object-fit: contain; }
     .contenedor-foto { position: relative; display: inline-block; width: 100%; }
-    .marca-agua { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); opacity: 0.4; width: 150px; pointer-events: none; }
+    .marca-agua { position: absolute; bottom: 20px; right: 20px; background-color: rgba(0, 0, 0, 0.6); color: rgba(255, 255, 255, 0.9); padding: 6px 12px; border-radius: 20px; font-size: 0.85em; font-weight: bold; letter-spacing: 1px; pointer-events: none; backdrop-filter: blur(3px); box-shadow: 0 2px 4px rgba(0,0,0,0.3); }
     .etiqueta-pill { background: #eee; padding: 5px 10px; border-radius: 15px; margin-right: 5px; font-size: 0.85em; color: #555; }
     .carrusel-contenedor { position: relative; width: 100%; height: 500px; overflow: hidden; border-radius: 8px; background-color: #faf4ed; margin-bottom: 25px; }
     .carrusel-slide { display: none; width: 100%; height: 100%; text-align: center; }
@@ -27,8 +27,6 @@ block contenido
     if !usuario
       div.aviso-invitado
         p Estas viendo esto como invitado. Inicia sesion para dar like, comentar o ver otras opciones
-
-    //img.imagen-grande(src=foto.imagenes[0].url_imagen alt=foto.titulo)
     
     div.info-seccion
       h2= foto.titulo
@@ -43,7 +41,7 @@ block contenido
             div.carrusel-slide(class=(index === 0 ? "activo" : ""))
               img.imagen-grande(src=imagen.url_imagen alt=foto.titulo)
               if imagen.marca_agua
-                img.marca-agua(src="/images/watermark_logo.png" alt="Copyright")
+                div.marca-agua © #{foto.Usuario.nombre_usuario}
         else
           p(style="color: #999;") No hay imagenes disponibles.
       
