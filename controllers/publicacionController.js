@@ -349,6 +349,11 @@ export const denunciarPublicacion = async (req, res) => {
         const { id_publicacion } = req.params;
         const { motivo, justificacion } = req.body;
         const usuarioId = req.session.usuario.id;
+        const publicacion = await Publicacion.findByPk(id_publicacion);
+
+        if (!publicacion || publicacion.usuario_id === usuarioId) {
+            return res.redirect(req.get('referer') || '/');
+        }
 
         const denunciaPrevia = await Denuncia.findOne({
             where: {
@@ -518,6 +523,11 @@ export const denunciarComentario = async (req, res) => {
         const { id_comentario } = req.params;
         const { motivo, justificacion } = req.body;
         const usuarioId = req.session.usuario.id;
+        const comentario = await Comentarios.findByPk(id_comentario);
+
+        if (!comentario || comentario.usuario_id === usuarioId) {
+            return res.redirect(req.get('referer') || '/');
+        }
 
         const denunciaPrevia = await DenunciaComentario.findOne({
             where: { comentario_id: id_comentario, usuario_denunciante_id: usuarioId }
