@@ -467,7 +467,10 @@ export const mostrarPerfil = async (req, res) => {
         const usuarioId = req.session.usuario.id;
 
         const misFotos = await Publicacion.findAll({
-            where: { usuario_id: usuarioId },
+            where: { 
+                usuario_id: usuarioId,
+                estado: 'activa'
+            },
             include: [
                 { model: Imagen, as: 'imagenes' },
                 { model: Usuario, as: 'Usuario', attributes: ['nombre_usuario'] }
@@ -658,7 +661,10 @@ export const mostrarPerfilUsuarioBusqueda = async (req, res) => {
         }
 
         const publicaciones = await Publicacion.findAll({
-            where: { usuario_id: usuarioObjetivo.id },
+            where: { 
+                usuario_id: usuarioObjetivo.id,
+                estado: 'activa'
+            },
             include: [{ model: Imagen, as: 'imagenes' }]
         });
 
