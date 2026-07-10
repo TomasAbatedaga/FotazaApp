@@ -24,7 +24,6 @@ block contenido
                     |  (por #{denuncia.Denunciante.nombre_usuario}): 
                     em "#{denuncia.justificacion}"
 
-              //- Los Botones del Juez
               div(style="margin-top: 20px; display: flex; gap: 10px;")
                 form(action=`/validador/baja/${pub.id}` method="POST")
                   button(type="submit" style="background: #cc0000; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer;") Dar de Baja Foto

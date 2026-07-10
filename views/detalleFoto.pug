@@ -50,7 +50,7 @@ block contenido
       if foto.etiquetas && foto.etiquetas.length > 0
         div(style="margin-bottom: 20px;")
           each etiqueta in foto.etiquetas
-            span.etiqueta-pill= etiqueta.nombre
+            a.etiqueta-pill(href=`/?categoria=${etiqueta.nombre}` style="text-decoration: none;")= etiqueta.nombre
 
       if foto.descripcion
         p(style="margin-top: 10px;")= foto.descripcion
