@@ -12,6 +12,9 @@ block contenido
       div
         label(for="foto_local") Sube tu foto (Solo JPG o PNG):
         input(type="file" id="fotos_locales" accept="image/jpeg, image/png" multiple required)
+        div#contenedor-preview(style="display: none; margin-top: 15px; background: #faf4ed; padding: 15px; border-radius: 8px;")
+          p(style="color: #8a5a44; font-size: 0.9em; margin: 0 0 10px 0; font-weight: bold;") Vista previa de tus imagenes seleccionadas:
+          div#galeria-preview(style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;")
         input(type="hidden" name="url_imagen" id="url_imagen_base64")
       
       div
@@ -25,7 +28,7 @@ block contenido
       div 
         label
           input(type="checkbox" name="tiene_copyright" id="tiene_copyright" value="si")
-        | Estas imágenes tienen Copyright (Aplicar marca de agua)
+        | Estas imagenes tienen Copyright (Aplicar marca de agua)
 
       div
         label(style="font-weight: bold;") Etiquetas (Selecciona al menos una):
@@ -48,18 +51,42 @@ block scripts
       script.
         const inputFotos = document.getElementById('fotos_locales');
         const contenedorBase64 = document.getElementById('contenedor_base64');
+        const contenedorPreview = document.getElementById('contenedor-preview');
+        const galeriaPreview = document.getElementById('galeria-preview');
 
         inputFotos.addEventListener('change', function(event) {
           contenedorBase64.innerHTML = '';
-          Array.from(event.target.files).forEach((archivo,index) => {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-              const inputOculto = document.createElement('input');
-              inputOculto.type = 'hidden';
-              inputOculto.name = 'imagenes_base64[]';
-              inputOculto.value = e.target.result;
-              contenedorBase64.appendChild(inputOculto);
-            };
-            reader.readAsDataURL(archivo);
-          });  
+          galeriaPreview.innerHTML = '';
+
+          const archivos = event.target.files;
+
+          if (archivos.length > 0) {
+            contenedorPreview.style.display = 'block';
+
+            Array.from(archivos).forEach((archivo) => {
+              const reader = new FileReader();
+              
+              reader.onload = function(e) {
+                const inputOculto = document.createElement('input');
+                inputOculto.type = 'hidden';
+                inputOculto.name = 'imagenes_base64[]';
+                inputOculto.value = e.target.result;
+                contenedorBase64.appendChild(inputOculto);
+
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.alt = archivo.name;
+                img.style.width = '150px';
+                img.style.height = '150px';
+                img.style.objectFit = 'cover';
+                img.style.borderRadius = '8px';
+                img.style.boxShadow = '0 2px 5px rgba(0,0,0,0.1)';
+                
+                galeriaPreview.appendChild(img);
+              };
+              reader.readAsDataURL(archivo);
+            });
+          } else {
+            contenedorPreview.style.display = 'none';
+          }  
         });
