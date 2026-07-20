@@ -99,10 +99,18 @@ export const mostrarDetalleFoto = async (req, res) => {
         let totalLikes = 0;
         let promedio = 0;
         let totalVotosPuntaje = 0;
+        let usuarioDioLike = false;
         
         if (foto.valoraciones && foto.valoraciones.length > 0) {
             const likes = foto.valoraciones.filter(v => v.me_gusta === true);
             totalLikes = likes.length;
+
+            if (req.session.usuario) {
+                const miVoto = foto.valoraciones.find(v => v.usuario_id === req.session.usuario.id);
+                if (miVoto && miVoto.me_gusta === true) {
+                    usuarioDioLike = true;
+                }
+            }
 
             const puntajes = foto.valoraciones.filter(v => v.puntaje !== null);
             if (puntajes.length > 0) {
@@ -125,7 +133,8 @@ export const mostrarDetalleFoto = async (req, res) => {
             totalLikes,
             promedio,
             totalVotosPuntaje,
-            misColecciones
+            misColecciones,
+            usuarioDioLike
         });
     } catch (error) {
         console.error(error);
