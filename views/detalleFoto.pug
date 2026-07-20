@@ -30,7 +30,8 @@ block contenido
     
     div.info-seccion
       h2= foto.titulo
-      p Publicado por: #{foto.Usuario.nombre_usuario}
+      p(style="margin: 0; color: #666;") Publicado por: 
+        a(href=`/usuario/${foto.Usuario.nombre_usuario}` style="color: #8a5a44; font-weight: bold; text-decoration: none; transition: color 0.2s;") #{foto.Usuario.nombre_usuario}
 
       div.carrusel-contenedor
         if foto.imagenes && foto.imagenes.length > 0

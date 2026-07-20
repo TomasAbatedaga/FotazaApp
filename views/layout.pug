@@ -112,4 +112,21 @@ html(lang="es")
 
     +footer()
 
+    script.
+      document.querySelectorAll('form').forEach(form => {
+        form.addEventListener('submit', function() {
+          const botonSubmit = this.querySelector('button[type="submit"]');
+          
+          if (botonSubmit) {
+            setTimeout(() => {
+              botonSubmit.disabled = true;
+              botonSubmit.style.opacity = '0.6';
+              botonSubmit.style.cursor = 'wait';
+              botonSubmit.innerHTML = 'Procesando...';
+            }, 10);
+          }
+        });
+      });
+
     block scripts
+
