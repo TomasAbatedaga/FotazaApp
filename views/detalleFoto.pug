@@ -91,7 +91,13 @@ block contenido
         
         if usuario && usuario.id === foto.usuario_id
           a.btn-accion(href=`/publicacion/${foto.id}/editar` style="background-color: #f39c12; color: white; border: none; text-decoration: none;") Editar
-      
+          form(action=`/publicacion/${foto.id}/toggle-comentarios` method="POST" style="display: inline-block;")
+            button.btn-accion(type="submit" style="background-color: #ff9800;") 
+                if foto.comentarios_abiertos
+                    | Cerrar Comentarios
+                else
+                    | Abrir Comentarios
+
       if usuario
         div(style="margin-top: 25px; padding: 15px; background: #faf4ed; border-radius: 8px; border: 1px solid #eee;")
           if misColecciones && misColecciones.length > 0
@@ -159,12 +165,17 @@ block contenido
                     button(disabled style="background: #cc0000; color: white; border: none; padding: 5px; border-radius: 5px; opacity: 0.5; cursor: not-allowed;") Enviar Denuncia
         else
           p(style="color: #666;") Aun no hay comentarios.
-        if usuario
-          form(action=`/publicacion/${foto.id}/comentar` method="POST" style="margin-top: 20px;")
-            textarea(name="texto" required placeholder="Escribe un comentario..." rows="3" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc; margin-bottom: 10px;")
-            button.btn-oscuro(type="submit" style="padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer;") Publicar Comentario
+        if !foto.comentarios_abiertos
+          div(style="margin-top: 20px; padding: 15px; background-color: #f5f5f5; text-align: center; border-radius: 5px;")
+            p(style="color: #666; margin: 0; font-style: italic;") El autor ha desactivado los comentarios para esta publicacion
         else
-          button.btn-accion(disabled style="opacity: 0.5; cursor: not-allowed;") Publicar Comentario
+          if usuario
+            form(action=`/publicacion/${foto.id}/comentar` method="POST" style="margin-top: 20px;")
+              textarea(name="texto" required placeholder="Escribe un comentario..." rows="3" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc; margin-bottom: 10px;")
+              button.btn-oscuro(type="submit" style="padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer;") Publicar Comentario
+          else
+            div(style="margin-top: 20px;")
+              button.btn-accion(disabled style="opacity: 0.5; cursor: not-allowed;") Publicar Comentario
 
 
 block scripts  

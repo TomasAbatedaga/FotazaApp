@@ -341,6 +341,16 @@ export const agregarComentario = async (req, res) => {
         const { texto } = req.body;
         const usuarioId = req.session.usuario.id;
 
+        const foto = await Publicacion.findByPk(id_publicacion);
+
+        if (!foto) {
+            return res.status(404).send('Publicacion no encontrada');
+        }
+
+        if (!foto.comentarios_abiertos) {
+            return res.status(403).send('El autor cerro los comentarios de esta publicacion');
+        }
+
         if (texto && texto.trim() !== '') {
             await Comentarios.create({
                 publicacion_id: id_publicacion,
@@ -348,8 +358,6 @@ export const agregarComentario = async (req, res) => {
                 texto: texto
             });
         }
-
-        const foto = await Publicacion.findByPk(id_publicacion);
 
         if (foto.usuario_id !== usuarioId) {
             await Notificacion.create({
@@ -767,6 +775,28 @@ export const mostrarFeedSeguidos = async (req, res) => {
 
     } catch (error) {
         console.error("Error al cargar el feed:", error);
+        res.redirect('/');
+    }
+};
+
+export const toggleComentarios = async (req, res) => {
+    try {
+        const { id_publicacion } = req.params;
+        const usuarioId = req.session.usuario.id;
+
+        const publicacion = await Publicacion.findByPk(id_publicacion);
+
+        if (publicacion.usuario_id !== usuarioId) {
+            return res.status(403).send('No tenes permiso para modificar esta publicacion');
+        }
+
+        publicacion.comentarios_abiertos = !publicacion.comentarios_abiertos;
+await publicacion.save();
+
+        res.redirect(`/foto/${id_publicacion}`);
+        
+    } catch (error) {
+        console.error("Error al cambiar estado de comentarios", error);
         res.redirect('/');
     }
 };

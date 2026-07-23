@@ -32,6 +32,7 @@ import { misColecciones } from '../controllers/coleccionController.js';
 import { crearColeccion } from '../controllers/coleccionController.js';
 import { guardarEnColeccion } from '../controllers/coleccionController.js';
 import { verColeccion } from '../controllers/coleccionController.js';
+import { toggleComentarios } from '../controllers/publicacionController.js';
 
 
 const router = express.Router();
@@ -67,6 +68,6 @@ router.get('/colecciones', estaLogueado, misColecciones);
 router.post('/colecciones/crear', estaLogueado, crearColeccion);
 router.post('/colecciones/guardar', estaLogueado, guardarEnColeccion);
 router.get('/colecciones/:id', estaLogueado, verColeccion);
-
+router.post('/publicacion/:id_publicacion/toggle-comentarios', estaLogueado, toggleComentarios);
 
 export default router;
