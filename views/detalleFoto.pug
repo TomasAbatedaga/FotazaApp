@@ -41,7 +41,7 @@ block contenido
           each imagen, index in foto.imagenes
             div.carrusel-slide(class=(index === 0 ? "activo" : ""))
               img.imagen-grande(src=imagen.url_imagen alt=foto.titulo)
-              if imagen.marca_agua
+              if imagen.licencia === 'copyright'
                 div.marca-agua © #{foto.Usuario.nombre_usuario}
         else
           p(style="color: #999;") No hay imagenes disponibles.

@@ -173,6 +173,7 @@ export const crearPublicacion = async (req,res)=>{
             const todasLasEtiquetas = await Etiquetas.findAll(); 
             return res.render('nuevaFoto', { 
                 etiquetas: todasLasEtiquetas,
+                usuario: req.session.usuario,
                 mensajeAlerta: { status: 'error', text: 'El titulo es obligatorio' } 
             });
         }
@@ -181,10 +182,27 @@ export const crearPublicacion = async (req,res)=>{
             const todasLasEtiquetas = await Etiquetas.findAll();
             return res.render('nuevaFoto', { 
                 etiquetas: todasLasEtiquetas,
+                usuario: req.session.usuario,
                 mensajeAlerta: { status: 'error', text: 'Debes subir al menos una imagen valida' } 
             });
         }
 
+        const arrayImagenes = Array.isArray(imagenes_base64) ? imagenes_base64 : [imagenes_base64];
+
+        const formatosPermitidos = ['data:image/jpeg', 'data:image/png', 'data:image/jpg', 'data:image/webp'];
+
+        for (const base64Texto of arrayImagenes) {
+            const tipo = base64Texto.split(';')[0];
+            
+            if (!formatosPermitidos.includes(tipo)) {
+                const todasLasEtiquetas = await Etiquetas.findAll();
+                return res.render('nuevaFoto', { 
+                    etiquetas: todasLasEtiquetas,
+                    usuario: req.session.usuario,
+                    mensajeAlerta: { status: 'error', text: 'Formato no valido. Solo se permiten imagenes (JPG, JPEG, PNG, WEBP).' } 
+                });
+            }
+        }
 
         const nuevaPublicacion = await Publicacion.create({
             usuario_id: usuarioId,
@@ -193,16 +211,11 @@ export const crearPublicacion = async (req,res)=>{
             estado: 'activa'
         });
 
-        const arrayImagenes = Array.isArray(imagenes_base64) ? imagenes_base64 : [imagenes_base64];
-
-        const aplicarMarca = tiene_copyright === 'si' ? 'watermark_logo.png' : null;
-
         for (const base64Texto of arrayImagenes) {
             await Imagen.create({
                 publicacion_id: nuevaPublicacion.id,
                 url_imagen: base64Texto,
                 licencia: tiene_copyright === 'si' ? 'copyright' : 'sin_copyright',
-                marca_agua: aplicarMarca
             });
         }
 
@@ -238,6 +251,7 @@ export const crearPublicacion = async (req,res)=>{
             const todasLasEtiquetas = await Etiquetas.findAll();
             res.render('nuevaFoto', {
                 etiquetas: todasLasEtiquetas,
+                usuario: req.session.usuario,
                 mensajeAlerta: { 
                 status: 'error',
                 text: 'Hubo un error al guardar la foto, intente nuevamente'}

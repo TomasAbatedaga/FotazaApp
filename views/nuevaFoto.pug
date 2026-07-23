@@ -10,7 +10,7 @@ block contenido
     form(action="/nuevaFoto" method="POST" style="display: flex; flex-direction: column; gap: 15px;")
       
       div
-        label(for="foto_local") Sube tu foto (Solo JPG o PNG):
+        label(for="foto_local") Sube tu foto (Solo JPG, JPEG, PNG, WEBP):
         input(type="file" id="fotos_locales" accept="image/jpeg, image/png" multiple required)
         div#contenedor-preview(style="display: none; margin-top: 15px; background: #faf4ed; padding: 15px; border-radius: 8px;")
           p(style="color: #8a5a44; font-size: 0.9em; margin: 0 0 10px 0; font-weight: bold;") Vista previa de tus imagenes seleccionadas:
