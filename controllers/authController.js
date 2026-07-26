@@ -37,7 +37,7 @@ export const registrarUsuario = async (req, res) => {
             estado: 'activo'
         });
 
-        return res.render('registro', { 
+        return res.render('login', { 
                 mensajeAlerta: { status: 'success', text: 'Usuario registrado con exito' } 
             });
 
