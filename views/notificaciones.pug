@@ -29,6 +29,10 @@ block contenido
                     strong= notif.Generador.nombre_usuario
                     |  ha comenzado a seguirte. 
                     a(href=`/usuario/${notif.Generador.nombre_usuario}` style="color: #8a5a44; font-weight: bold; text-decoration: none;") [Ver Perfil]
+                else if notif.tipo_evento === 'mensaje'
+                    strong= notif.Generador.nombre_usuario
+                    |  te ha enviado un nuevo mensaje privado. 
+                    a(href="/mensajes" style="color: #8a5a44; font-weight: bold; text-decoration: none;") [Ver Bandeja]
 
                 div(style="font-size: 0.8em; color: #999;")
                 | #{new Date(notif.fecha_notificacion).toLocaleString('es-AR', { hour12: false })}

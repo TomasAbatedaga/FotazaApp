@@ -59,7 +59,7 @@ export const mostrarMensajes = async (req, res) => {
                 { model: Usuario, as: 'Emisor', attributes: ['nombre_usuario', 'email'] },
                 { model: Usuario, as: 'Receptor', attributes: ['nombre_usuario', 'email'] }
             ],
-            order: [['fecha_envio', 'DESC']]
+            order: [['fecha_envio', 'ASC']]
         });
 
         res.render('mensajes', {
@@ -83,6 +83,12 @@ export const responderMensaje = async (req, res) => {
                 receptor_id: receptor_id,
                 publicacion_id: null,
                 texto: texto
+            });
+            await Notificacion.create({
+                usuario_receptor_id: receptor_id,
+                usuario_generador_id: emisor_id,
+                tipo_evento: 'mensaje',
+                publicacion_id: null
             });
         }
         res.redirect('/mensajes');
